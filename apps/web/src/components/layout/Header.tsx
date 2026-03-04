@@ -3,7 +3,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import {
-  Bell,
   Search,
   Package,
   Users,
@@ -288,12 +287,6 @@ export default function Header({ title, description }: HeaderProps) {
               </div>
             )}
           </div>
-
-          {/* Notifications */}
-          <button className="relative rounded-lg p-2 hover:bg-gray-100 transition-colors">
-            <Bell className="h-5 w-5 text-gray-500" />
-            <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-brand-accent" />
-          </button>
 
           {/* Profile */}
           <div className="hidden sm:flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-1.5">

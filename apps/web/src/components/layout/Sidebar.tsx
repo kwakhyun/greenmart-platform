@@ -13,7 +13,6 @@ import {
   MessageSquare,
   Truck,
   BarChart3,
-  Settings,
   Leaf,
   Menu,
   X,
@@ -116,11 +115,16 @@ export default function Sidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="absolute bottom-0 left-0 right-0 border-t border-gray-200 p-3">
-        <Link href="/settings" className="sidebar-link">
-          <Settings className="h-4.5 w-4.5" />
-          <span>설정</span>
-        </Link>
+      <div className="absolute bottom-0 left-0 right-0 border-t border-gray-200 p-4">
+        <div className="flex items-center gap-2.5">
+          <div className="h-8 w-8 rounded-full bg-brand-primary/20 flex items-center justify-center">
+            <span className="text-xs font-bold text-brand-primary">관</span>
+          </div>
+          <div>
+            <p className="text-xs font-semibold text-gray-700">관리자</p>
+            <p className="text-[10px] text-gray-400">admin@greenmart.co.kr</p>
+          </div>
+        </div>
       </div>
     </>
   );
