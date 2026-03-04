@@ -1,14 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Modal } from "@/components/ui";
 import { useToast } from "@/components/ui/Toast";
-import { useCreateProduct, useCategories, useBrands } from "@/hooks";
-import { Loader2 } from "lucide-react";
+import {
+  useCreateProduct,
+  useUpdateProduct,
+  useCategories,
+  useBrands,
+} from "@/hooks";
+import { Loader2, ImagePlus, X } from "lucide-react";
+import type { Product } from "@greenmart/shared";
 
 interface ProductFormModalProps {
   isOpen: boolean;
   onClose: () => void;
+  product?: Product | null; // 수정 모드일 때 전달
 }
 
 const TAG_OPTIONS = [
@@ -34,11 +41,18 @@ const STATUS_OPTIONS = [
   { value: "DISCONTINUED", label: "단종" },
 ] as const;
 
-export function ProductFormModal({ isOpen, onClose }: ProductFormModalProps) {
+export function ProductFormModal({
+  isOpen,
+  onClose,
+  product,
+}: ProductFormModalProps) {
   const { data: categoriesData } = useCategories();
   const { data: brandsData } = useBrands();
   const createProduct = useCreateProduct();
+  const updateProduct = useUpdateProduct();
   const { toast } = useToast();
+
+  const isEditMode = !!product;
 
   const [form, setForm] = useState({
     name: "",
@@ -54,10 +68,80 @@ export function ProductFormModal({ isOpen, onClose }: ProductFormModalProps) {
     salesChannels: [] as string[],
     status: "ACTIVE" as string,
   });
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // 수정 모드일 때 기존 데이터로 폼 초기화
+  useEffect(() => {
+    if (isOpen && product) {
+      setForm({
+        name: product.name,
+        brandId: product.brand.id,
+        categoryId: product.category.id,
+        originalPrice: product.originalPrice,
+        salePrice: product.salePrice,
+        description: product.description,
+        shortDescription: product.shortDescription || "",
+        volume: product.volume || "",
+        skinType: product.skinType || [],
+        tags: product.tags || [],
+        salesChannels: product.salesChannels || [],
+        status: product.status,
+      });
+      setImagePreviews(product.images?.map((img) => img.url) ?? []);
+      setImageFiles([]);
+    } else if (isOpen) {
+      setForm({
+        name: "",
+        brandId: "",
+        categoryId: "",
+        originalPrice: 0,
+        salePrice: 0,
+        description: "",
+        shortDescription: "",
+        volume: "",
+        skinType: [],
+        tags: [],
+        salesChannels: [],
+        status: "ACTIVE",
+      });
+      setImageFiles([]);
+      setImagePreviews([]);
+    }
+    setErrors({});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, product]);
 
   const categories = categoriesData ?? [];
   const brands = brandsData ?? [];
+
+  function handleImageAdd(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files ?? []);
+    if (files.length === 0) return;
+
+    const maxImages = 5;
+    const remaining = maxImages - imagePreviews.length;
+    const newFiles = files.slice(0, remaining);
+
+    setImageFiles((prev) => [...prev, ...newFiles]);
+
+    newFiles.forEach((file) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreviews((prev) => [...prev, reader.result as string]);
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // input 초기화
+    e.target.value = "";
+  }
+
+  function handleImageRemove(index: number) {
+    setImagePreviews((prev) => prev.filter((_, i) => i !== index));
+    setImageFiles((prev) => prev.filter((_, i) => i !== index));
+  }
 
   function handleChange(
     e: React.ChangeEvent<
@@ -108,56 +192,47 @@ export function ProductFormModal({ isOpen, onClose }: ProductFormModalProps) {
     e.preventDefault();
     if (!validate()) return;
 
+    const payload = {
+      name: form.name,
+      brandId: form.brandId,
+      categoryId: form.categoryId,
+      originalPrice: form.originalPrice,
+      salePrice: form.salePrice,
+      description: form.description,
+      shortDescription: form.shortDescription,
+      volume: form.volume || undefined,
+      skinType: form.skinType.length > 0 ? form.skinType : undefined,
+      tags: form.tags as (
+        | "BEST"
+        | "NEW"
+        | "SALE"
+        | "TODAY_DEAL"
+        | "ONLINE_ONLY"
+        | "EDITOR_PICK"
+        | "GLOBAL"
+      )[],
+      salesChannels: form.salesChannels as ("ONLINE" | "OFFLINE" | "GLOBAL")[],
+      status: form.status as
+        | "ACTIVE"
+        | "INACTIVE"
+        | "OUT_OF_STOCK"
+        | "DISCONTINUED",
+    };
+
     try {
-      await createProduct.mutateAsync({
-        name: form.name,
-        brandId: form.brandId,
-        categoryId: form.categoryId,
-        originalPrice: form.originalPrice,
-        salePrice: form.salePrice,
-        description: form.description,
-        shortDescription: form.shortDescription,
-        volume: form.volume || undefined,
-        skinType: form.skinType.length > 0 ? form.skinType : undefined,
-        tags: form.tags as (
-          | "BEST"
-          | "NEW"
-          | "SALE"
-          | "TODAY_DEAL"
-          | "ONLINE_ONLY"
-          | "EDITOR_PICK"
-          | "GLOBAL"
-        )[],
-        salesChannels: form.salesChannels as (
-          | "ONLINE"
-          | "OFFLINE"
-          | "GLOBAL"
-        )[],
-        status: form.status as
-          | "ACTIVE"
-          | "INACTIVE"
-          | "OUT_OF_STOCK"
-          | "DISCONTINUED",
-      });
-      toast("success", "상품이 등록되었습니다.");
+      if (isEditMode && product) {
+        await updateProduct.mutateAsync({ id: product.id, data: payload });
+        toast("success", "상품이 수정되었습니다.");
+      } else {
+        await createProduct.mutateAsync(payload);
+        toast("success", "상품이 등록되었습니다.");
+      }
       onClose();
-      // 폼 초기화
-      setForm({
-        name: "",
-        brandId: "",
-        categoryId: "",
-        originalPrice: 0,
-        salePrice: 0,
-        description: "",
-        shortDescription: "",
-        volume: "",
-        skinType: [],
-        tags: [],
-        salesChannels: [],
-        status: "ACTIVE",
-      });
     } catch {
-      toast("error", "상품 등록에 실패했습니다.");
+      toast(
+        "error",
+        isEditMode ? "상품 수정에 실패했습니다." : "상품 등록에 실패했습니다.",
+      );
     }
   }
 
@@ -165,14 +240,61 @@ export function ProductFormModal({ isOpen, onClose }: ProductFormModalProps) {
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="상품 등록"
-      description="새 상품을 카탈로그에 등록합니다."
+      title={isEditMode ? "상품 수정" : "상품 등록"}
+      description={
+        isEditMode
+          ? "상품 정보를 수정합니다."
+          : "새 상품을 카탈로그에 등록합니다."
+      }
       size="lg"
     >
       <form
         onSubmit={handleSubmit}
         className="space-y-4 max-h-[65vh] overflow-y-auto pr-1"
       >
+        {/* 상품 이미지 */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            상품 이미지{" "}
+            <span className="text-xs text-gray-400">(최대 5장)</span>
+          </label>
+          <div className="flex flex-wrap gap-2">
+            {imagePreviews.map((src, idx) => (
+              <div
+                key={idx}
+                className="relative h-20 w-20 rounded-lg overflow-hidden border border-gray-200 group"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={src}
+                  alt={`상품 이미지 ${idx + 1}`}
+                  className="h-full w-full object-cover"
+                />
+                <button
+                  type="button"
+                  onClick={() => handleImageRemove(idx)}
+                  className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <X className="h-4 w-4 text-white" />
+                </button>
+              </div>
+            ))}
+            {imagePreviews.length < 5 && (
+              <label className="h-20 w-20 rounded-lg border-2 border-dashed border-gray-300 flex flex-col items-center justify-center cursor-pointer hover:border-brand-primary hover:bg-brand-primary/5 transition-colors">
+                <ImagePlus className="h-5 w-5 text-gray-400" />
+                <span className="text-[10px] text-gray-400 mt-0.5">추가</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleImageAdd}
+                  className="hidden"
+                />
+              </label>
+            )}
+          </div>
+        </div>
+
         {/* 상품명 */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -379,22 +501,26 @@ export function ProductFormModal({ isOpen, onClose }: ProductFormModalProps) {
           </button>
           <button
             type="submit"
-            disabled={createProduct.isPending}
+            disabled={createProduct.isPending || updateProduct.isPending}
             className="btn-primary disabled:opacity-50"
           >
-            {createProduct.isPending ? (
+            {createProduct.isPending || updateProduct.isPending ? (
               <>
-                <Loader2 className="h-4 w-4 mr-1 animate-spin" /> 등록 중...
+                <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                {isEditMode ? "수정 중..." : "등록 중..."}
               </>
+            ) : isEditMode ? (
+              "상품 수정"
             ) : (
               "상품 등록"
             )}
           </button>
         </div>
 
-        {createProduct.isError && (
+        {(createProduct.isError || updateProduct.isError) && (
           <p className="text-xs text-red-500 text-center">
-            등록에 실패했습니다. 입력값을 확인해주세요.
+            {isEditMode ? "수정" : "등록"}에 실패했습니다. 입력값을
+            확인해주세요.
           </p>
         )}
       </form>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import Header from "@/components/layout/Header";
 import { useDeliveries } from "@/hooks";
 import {
@@ -151,7 +152,12 @@ export default function DeliveryPage() {
                         <div>
                           <div className="flex items-center gap-2 flex-wrap">
                             <h3 className="text-sm font-semibold text-gray-900">
-                              {delivery.id}
+                              <Link
+                                href={`/inventory/delivery/${delivery.id}`}
+                                className="hover:text-brand-primary hover:underline transition-colors"
+                              >
+                                {delivery.id}
+                              </Link>
                             </h3>
                             <span className="badge bg-gray-100 text-gray-600">
                               {DELIVERY_TYPE_LABELS[delivery.type]}

@@ -14,6 +14,7 @@ import { Search, Download, UserPlus, Trash2, Loader2 } from "lucide-react";
 import { GRADE_COLORS } from "@/lib/constants";
 import { CustomerFormModal, ConfirmDeleteModal } from "@/components/forms";
 import { useToast } from "@/components/ui/Toast";
+import { exportToCSV } from "@/lib/export-excel";
 
 export default function MembersPage() {
   const [search, setSearch] = useState("");
@@ -127,7 +128,41 @@ export default function MembersPage() {
             <option value="SILVER">실버</option>
             <option value="BRONZE">브론즈</option>
           </select>
-          <button className="btn-secondary">
+          <button
+            className="btn-secondary"
+            onClick={() => {
+              if (filtered.length === 0) return;
+              exportToCSV(
+                filtered,
+                [
+                  { header: "이름", accessor: (m) => m.name },
+                  { header: "이메일", accessor: (m) => m.email },
+                  {
+                    header: "등급",
+                    accessor: (m) => getMemberGradeLabel(m.grade),
+                  },
+                  {
+                    header: "상태",
+                    accessor: (m) =>
+                      m.status === "ACTIVE"
+                        ? "활성"
+                        : m.status === "DORMANT"
+                          ? "휴면"
+                          : "탈퇴",
+                  },
+                  { header: "가입 채널", accessor: (m) => m.joinChannel },
+                  { header: "포인트", accessor: (m) => m.points },
+                  {
+                    header: "총 구매액",
+                    accessor: (m) => m.totalPurchaseAmount,
+                  },
+                  { header: "총 주문", accessor: (m) => m.totalOrders },
+                ],
+                "회원목록",
+              );
+              toast("success", "회원 목록이 다운로드되었습니다.");
+            }}
+          >
             <Download className="h-4 w-4 mr-1" /> 내보내기
           </button>
           <button className="btn-primary" onClick={() => setIsFormOpen(true)}>

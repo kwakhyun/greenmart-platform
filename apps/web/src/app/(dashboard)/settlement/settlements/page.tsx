@@ -18,7 +18,10 @@ import {
   ArrowUpRight,
   Loader2,
   Filter,
+  Download,
 } from "lucide-react";
+import { exportToCSV } from "@/lib/export-excel";
+import { useToast } from "@/components/ui/Toast";
 
 export default function SettlementsPage() {
   const [periodFilter, setPeriodFilter] = useState("");
@@ -36,6 +39,7 @@ export default function SettlementsPage() {
     totalCommission: 0,
     totalNet: 0,
   };
+  const { toast } = useToast();
 
   return (
     <>
@@ -121,6 +125,41 @@ export default function SettlementsPage() {
             <option value="CONFIRMED">정산 확정</option>
             <option value="PAID">지급 완료</option>
           </select>
+          <button
+            className="btn-secondary ml-auto"
+            onClick={() => {
+              if (settlements.length === 0) return;
+              exportToCSV(
+                settlements,
+                [
+                  { header: "파트너사", accessor: (s) => s.partnerName },
+                  { header: "기간", accessor: (s) => s.period },
+                  { header: "총 매출", accessor: (s) => s.totalSales },
+                  { header: "환불", accessor: (s) => s.totalRefunds },
+                  { header: "수수료율(%)", accessor: (s) => s.commissionRate },
+                  { header: "수수료", accessor: (s) => s.commissionAmount },
+                  {
+                    header: "배송비 정산",
+                    accessor: (s) => s.shippingFeeSettlement,
+                  },
+                  {
+                    header: "프로모션 분담",
+                    accessor: (s) => s.promotionCostShare,
+                  },
+                  { header: "순 정산금", accessor: (s) => s.netAmount },
+                  { header: "주문수", accessor: (s) => s.orderCount },
+                  {
+                    header: "상태",
+                    accessor: (s) => getSettlementStatusLabel(s.status),
+                  },
+                ],
+                "정산내역",
+              );
+              toast("success", "정산 내역이 다운로드되었습니다.");
+            }}
+          >
+            <Download className="h-4 w-4 mr-1" /> 내보내기
+          </button>
         </div>
 
         {/* Loading */}

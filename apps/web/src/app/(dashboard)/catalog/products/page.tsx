@@ -11,7 +11,15 @@ import {
 import { useDebounce } from "@/hooks";
 import { useRouter } from "next/navigation";
 import { formatCurrency, cn, getStatusColor } from "@/lib/utils";
-import { Search, Plus, Star, Globe, Loader2, Trash2 } from "lucide-react";
+import {
+  Search,
+  Plus,
+  Star,
+  Globe,
+  Loader2,
+  Trash2,
+  Package,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { TAG_LABELS, TAG_COLORS } from "@/lib/constants";
@@ -207,14 +215,21 @@ export default function ProductsPage() {
                   >
                     {/* Image */}
                     <div className="relative aspect-square bg-gray-100 overflow-hidden">
-                      <Image
-                        src={product.images[0]?.url}
-                        alt={product.name}
-                        width={400}
-                        height={400}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        loading="lazy"
-                      />
+                      {product.images[0]?.url ? (
+                        <Image
+                          src={product.images[0].url}
+                          alt={product.name}
+                          width={400}
+                          height={400}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex flex-col items-center justify-center text-gray-300">
+                          <Package className="h-12 w-12 mb-1" />
+                          <span className="text-xs">이미지 없음</span>
+                        </div>
+                      )}
                       <div className="absolute top-2 left-2 flex flex-wrap gap-1">
                         {product.tags.map((tag) => (
                           <span
@@ -316,14 +331,20 @@ export default function ProductsPage() {
                     >
                       <td className="table-cell">
                         <div className="flex items-center gap-3">
-                          <Image
-                            src={product.images[0]?.url}
-                            alt=""
-                            width={40}
-                            height={40}
-                            className="h-10 w-10 rounded-lg object-cover"
-                            loading="lazy"
-                          />
+                          {product.images[0]?.url ? (
+                            <Image
+                              src={product.images[0].url}
+                              alt=""
+                              width={40}
+                              height={40}
+                              className="h-10 w-10 rounded-lg object-cover"
+                              loading="lazy"
+                            />
+                          ) : (
+                            <div className="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center">
+                              <Package className="h-5 w-5 text-gray-300" />
+                            </div>
+                          )}
                           <div>
                             <p className="text-sm font-medium text-gray-900">
                               {product.name}

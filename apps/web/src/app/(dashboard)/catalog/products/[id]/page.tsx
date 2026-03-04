@@ -29,6 +29,7 @@ export default function ProductDetailPage() {
   const router = useRouter();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
   const productId = typeof params.id === "string" ? params.id : "";
 
   const { data: product, isLoading, isError } = useProduct(productId);
@@ -87,7 +88,10 @@ export default function ProductDetailPage() {
             상품 목록
           </Link>
           <div className="flex items-center gap-2">
-            <button className="btn-secondary">
+            <button
+              className="btn-secondary"
+              onClick={() => setIsEditOpen(true)}
+            >
               <Edit className="h-4 w-4 mr-1" />
               수정
             </button>
@@ -106,14 +110,21 @@ export default function ProductDetailPage() {
           {/* Image */}
           <div className="card overflow-hidden">
             <div className="aspect-square bg-gray-100 relative">
-              <Image
-                src={product.images[0]?.url}
-                alt={product.name}
-                width={600}
-                height={600}
-                className="w-full h-full object-cover"
-                priority
-              />
+              {product.images[0]?.url ? (
+                <Image
+                  src={product.images[0].url}
+                  alt={product.name}
+                  width={600}
+                  height={600}
+                  className="w-full h-full object-cover"
+                  priority
+                />
+              ) : (
+                <div className="w-full h-full flex flex-col items-center justify-center text-gray-300">
+                  <Package className="h-16 w-16 mb-2" />
+                  <span className="text-sm">이미지 없음</span>
+                </div>
+              )}
               {product.salesChannels.includes("GLOBAL") && (
                 <div className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm rounded-full p-2">
                   <Globe className="h-5 w-5 text-indigo-600" />
@@ -329,6 +340,13 @@ export default function ProductDetailPage() {
             </div>
           </div>
         </Modal>
+
+        {/* Edit Modal */}
+        <ProductFormModal
+          isOpen={isEditOpen}
+          onClose={() => setIsEditOpen(false)}
+          product={product}
+        />
       </div>
     </>
   );

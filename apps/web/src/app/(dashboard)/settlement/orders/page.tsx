@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import Header from "@/components/layout/Header";
 import { useOrders, useDebounce } from "@/hooks";
 import {
@@ -14,6 +15,8 @@ import {
 import { Search, Download, Loader2, RefreshCw } from "lucide-react";
 import type { Order } from "@greenmart/shared";
 import { OrderStatusModal } from "@/components/forms";
+import { exportToCSV } from "@/lib/export-excel";
+import { useToast } from "@/components/ui/Toast";
 
 export default function OrdersPage() {
   const [statusFilter, setStatusFilter] = useState("");
@@ -21,6 +24,7 @@ export default function OrdersPage() {
   const [page, setPage] = useState(1);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const debouncedSearch = useDebounce(search, 300);
+  const { toast } = useToast();
 
   const { data, isLoading, isError, error } = useOrders({
     page,
@@ -105,7 +109,36 @@ export default function OrdersPage() {
               aria-label="주문 검색"
             />
           </div>
-          <button className="btn-secondary">
+          <button
+            className="btn-secondary"
+            onClick={() => {
+              if (filtered.length === 0) return;
+              exportToCSV(
+                filtered,
+                [
+                  { header: "주문번호", accessor: (o) => o.orderNumber },
+                  { header: "고객명", accessor: (o) => o.customerName },
+                  {
+                    header: "상품",
+                    accessor: (o) =>
+                      o.items.map((i) => i.productName).join(", "),
+                  },
+                  { header: "결제금액", accessor: (o) => o.totalAmount },
+                  {
+                    header: "결제수단",
+                    accessor: (o) => getPaymentMethodLabel(o.paymentMethod),
+                  },
+                  {
+                    header: "상태",
+                    accessor: (o) => getOrderStatusLabel(o.status),
+                  },
+                  { header: "주문일시", accessor: (o) => o.orderedAt },
+                ],
+                "주문목록",
+              );
+              toast("success", "주문 목록이 다운로드되었습니다.");
+            }}
+          >
             <Download className="h-4 w-4 mr-1" /> 내보내기
           </button>
         </div>
@@ -158,7 +191,12 @@ export default function OrdersPage() {
                       className="border-b border-gray-50 hover:bg-gray-50/80"
                     >
                       <td className="table-cell font-mono text-xs text-brand-primary font-medium">
-                        {order.orderNumber}
+                        <Link
+                          href={`/settlement/orders/${order.id}`}
+                          className="hover:underline"
+                        >
+                          {order.orderNumber}
+                        </Link>
                       </td>
                       <td className="table-cell font-medium">
                         {order.customerName}
