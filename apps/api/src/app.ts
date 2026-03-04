@@ -18,13 +18,32 @@ export function createApp() {
   // ============================================================
   // 글로벌 미들웨어
   // ============================================================
-  app.use(helmet());
   app.use(
-    cors({
-      origin: process.env.CORS_ORIGIN || "http://localhost:3000",
-      credentials: true,
+    helmet({
+      crossOriginResourcePolicy: { policy: "cross-origin" },
     }),
   );
+
+  const allowedOrigins = process.env.CORS_ORIGIN
+    ? process.env.CORS_ORIGIN.split(",").map((o) => o.trim())
+    : ["http://localhost:3000"];
+
+  app.use(
+    cors({
+      origin: allowedOrigins,
+      credentials: true,
+      methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+    }),
+  );
+
+  // Preflight OPTIONS 요청 명시적 처리
+  app.options("*", cors({
+    origin: allowedOrigins,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }));
   app.use(
     morgan(process.env.NODE_ENV === "production" ? "combined" : "dev", {
       stream: { write: (message: string) => logger.http(message.trim()) },
