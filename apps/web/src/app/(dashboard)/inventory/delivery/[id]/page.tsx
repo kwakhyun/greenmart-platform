@@ -316,20 +316,20 @@ export default function DeliveryDetailPage() {
               <Clock className="h-4 w-4 text-gray-400" />
               배송 이력
             </h3>
-            <div className="relative pl-6">
+            <div className="relative pl-8">
               {/* vertical line */}
-              <div className="absolute left-[9px] top-2 bottom-2 w-0.5 bg-gray-200" />
+              <div className="absolute left-[11px] top-3 bottom-3 w-0.5 bg-gray-200" />
 
-              <div className="space-y-4">
+              <div className="space-y-5">
                 {delivery.timeline.map((event, idx) => {
                   const isLatest = idx === delivery.timeline.length - 1;
                   return (
-                    <div key={idx} className="relative flex items-start gap-3">
-                      <div className="absolute -left-6">
+                    <div key={idx} className="relative flex items-start gap-4">
+                      <div className="absolute -left-8 mt-0.5">
                         {isLatest ? (
-                          <CheckCircle2 className="h-[18px] w-[18px] text-brand-primary" />
+                          <CheckCircle2 className="h-[22px] w-[22px] text-brand-primary" />
                         ) : (
-                          <Circle className="h-[18px] w-[18px] text-gray-300 fill-white" />
+                          <Circle className="h-[22px] w-[22px] text-gray-300 fill-white" />
                         )}
                       </div>
                       <div className="flex-1">

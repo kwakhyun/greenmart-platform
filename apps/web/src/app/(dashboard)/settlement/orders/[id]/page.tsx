@@ -27,7 +27,7 @@ import {
   Truck,
   FileText,
 } from "lucide-react";
-import { useState } from "react";
+import { useToast } from "@/components/ui/Toast";
 
 const STATUS_FLOW: OrderStatus[] = [
   "PENDING",
@@ -42,21 +42,17 @@ export default function OrderDetailPage() {
   const orderId = typeof params.id === "string" ? params.id : "";
   const { data: order, isLoading, isError } = useOrder(orderId);
   const updateStatus = useUpdateOrderStatus();
-  const [toast, setToast] = useState<string | null>(null);
-
-  function showToast(msg: string) {
-    setToast(msg);
-    setTimeout(() => setToast(null), 3000);
-  }
+  const { toast } = useToast();
 
   async function handleStatusChange(newStatus: OrderStatus) {
     try {
       await updateStatus.mutateAsync({ id: orderId, status: newStatus });
-      showToast(
+      toast(
+        "success",
         `주문 상태가 "${getOrderStatusLabel(newStatus)}"(으)로 변경되었습니다.`,
       );
     } catch {
-      showToast("상태 변경에 실패했습니다.");
+      toast("error", "상태 변경에 실패했습니다.");
     }
   }
 
@@ -110,13 +106,6 @@ export default function OrderDetailPage() {
         description={`세틀먼트 플랫폼 · ${order.orderNumber}`}
       />
       <div className="p-6 space-y-6 animate-fade-in">
-        {/* Toast */}
-        {toast && (
-          <div className="fixed top-20 right-6 z-50 bg-gray-900 text-white px-4 py-2.5 rounded-lg shadow-lg text-sm animate-fade-in">
-            {toast}
-          </div>
-        )}
-
         {/* Back */}
         <Link
           href="/settlement/orders"

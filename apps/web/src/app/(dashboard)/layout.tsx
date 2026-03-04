@@ -10,7 +10,7 @@ export default function DashboardLayout({
   return (
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar />
-      <div className="flex-1 ml-64">{children}</div>
+      <div className="flex-1 lg:ml-64">{children}</div>
     </div>
   );
 }

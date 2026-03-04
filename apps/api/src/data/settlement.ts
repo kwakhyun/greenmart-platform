@@ -24,7 +24,7 @@ export const orders: Order[] = [
         productId: "prod-3",
         productName: "다이브인 저분자 히알루론산 세럼",
         productImage:
-          "https://images.unsplash.com/photo-1570194065650-d99fb4b38b17?w=100",
+          "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=100",
         quantity: 1,
         unitPrice: 17600,
         totalPrice: 17600,

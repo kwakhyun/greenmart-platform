@@ -23,6 +23,7 @@ import {
   Star,
   Loader2,
   MapPin,
+  Smartphone,
 } from "lucide-react";
 
 export default function MemberDetailPage() {
@@ -170,7 +171,7 @@ export default function MemberDetailPage() {
                 가입 채널
               </span>
               <div className="rounded-lg p-2 bg-purple-100">
-                <MapPin className="h-4 w-4 text-purple-600" />
+                <Smartphone className="h-4 w-4 text-purple-600" />
               </div>
             </div>
             <span className="text-xl font-bold text-gray-900">

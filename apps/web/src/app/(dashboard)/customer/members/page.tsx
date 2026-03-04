@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import Header from "@/components/layout/Header";
 import { useMembers, useDeleteMember, useDebounce } from "@/hooks";
 import {
@@ -217,14 +218,17 @@ export default function MembersPage() {
                       className="border-b border-gray-50 hover:bg-gray-50/80"
                     >
                       <td className="table-cell">
-                        <div>
-                          <p className="text-sm font-medium text-gray-900">
+                        <Link
+                          href={`/customer/members/${customer.id}`}
+                          className="block hover:opacity-80 transition-opacity"
+                        >
+                          <p className="text-sm font-medium text-gray-900 hover:text-brand-primary transition-colors">
                             {customer.name}
                           </p>
                           <p className="text-xs text-gray-400">
                             {customer.email}
                           </p>
-                        </div>
+                        </Link>
                       </td>
                       <td className="table-cell">
                         <span

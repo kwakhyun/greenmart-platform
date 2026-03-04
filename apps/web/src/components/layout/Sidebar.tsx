@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -14,6 +15,8 @@ import {
   BarChart3,
   Settings,
   Leaf,
+  Menu,
+  X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -35,18 +38,48 @@ const navigation = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
 
-  return (
-    <aside className="fixed left-0 top-0 z-40 h-screen w-64 border-r border-gray-200 bg-white">
+  // 라우트 변경 시 모바일 사이드바 닫기
+  useEffect(() => {
+    setIsMobileOpen(false);
+  }, [pathname]);
+
+  // 모바일 메뉴 열려 있을 때 스크롤 방지
+  useEffect(() => {
+    if (isMobileOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isMobileOpen]);
+
+  const sidebarContent = (
+    <>
       {/* Logo */}
-      <div className="flex h-16 items-center gap-2.5 border-b border-gray-200 px-5">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-primary">
-          <Leaf className="h-5 w-5 text-white" />
+      <div className="flex h-16 items-center justify-between border-b border-gray-200 px-5">
+        <div className="flex items-center gap-2.5">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-primary">
+            <Leaf className="h-5 w-5 text-white" />
+          </div>
+          <div>
+            <h1 className="text-sm font-bold text-gray-900">Core Platform</h1>
+            <p className="text-[10px] text-gray-400">
+              Health & Beauty Commerce
+            </p>
+          </div>
         </div>
-        <div>
-          <h1 className="text-sm font-bold text-gray-900">Core Platform</h1>
-          <p className="text-[10px] text-gray-400">Health & Beauty Commerce</p>
-        </div>
+        {/* Mobile close button */}
+        <button
+          onClick={() => setIsMobileOpen(false)}
+          className="lg:hidden rounded-lg p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+          aria-label="메뉴 닫기"
+        >
+          <X className="h-5 w-5" />
+        </button>
       </div>
 
       {/* Navigation */}
@@ -89,6 +122,38 @@ export default function Sidebar() {
           <span>설정</span>
         </Link>
       </div>
-    </aside>
+    </>
+  );
+
+  return (
+    <>
+      {/* Mobile hamburger button */}
+      <button
+        onClick={() => setIsMobileOpen(true)}
+        className="fixed top-4 left-4 z-50 lg:hidden rounded-lg p-2 bg-white border border-gray-200 shadow-sm hover:bg-gray-50 transition-colors"
+        aria-label="메뉴 열기"
+      >
+        <Menu className="h-5 w-5 text-gray-600" />
+      </button>
+
+      {/* Mobile overlay */}
+      {isMobileOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden animate-fade-in"
+          onClick={() => setIsMobileOpen(false)}
+        />
+      )}
+
+      {/* Sidebar - Desktop: always visible, Mobile: slide-in */}
+      <aside
+        className={cn(
+          "fixed left-0 top-0 z-40 h-screen w-64 border-r border-gray-200 bg-white transition-transform duration-300 ease-in-out",
+          "lg:translate-x-0",
+          isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
+        )}
+      >
+        {sidebarContent}
+      </aside>
+    </>
   );
 }

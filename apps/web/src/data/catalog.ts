@@ -366,7 +366,7 @@ export const products: Product[] = [
     images: [
       {
         id: "img-3-1",
-        url: "https://images.unsplash.com/photo-1570194065650-d99fb4b38b17?w=400&h=400&fit=crop",
+        url: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop",
         alt: "다이브인 세럼",
         sortOrder: 1,
         type: "main",

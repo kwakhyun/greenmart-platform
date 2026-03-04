@@ -53,8 +53,10 @@ export default function Header({ title, description }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
   const debouncedQuery = useDebounce(query, 400);
   const containerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const performSearch = useCallback(async (searchTerm: string) => {
     if (searchTerm.length < 2) {
@@ -107,6 +109,7 @@ export default function Header({ title, description }: HeaderProps) {
       }
 
       setResults(items);
+      setActiveIndex(-1);
     } catch {
       setResults([]);
     } finally {
@@ -136,35 +139,74 @@ export default function Header({ title, description }: HeaderProps) {
     setIsOpen(false);
     setQuery("");
     setResults([]);
+    setActiveIndex(-1);
     router.push(result.href);
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent) {
+    if (!isOpen || results.length === 0) return;
+
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault();
+        setActiveIndex((prev) => (prev < results.length - 1 ? prev + 1 : 0));
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        setActiveIndex((prev) => (prev > 0 ? prev - 1 : results.length - 1));
+        break;
+      case "Enter":
+        e.preventDefault();
+        if (activeIndex >= 0 && activeIndex < results.length) {
+          handleSelect(results[activeIndex]);
+        }
+        break;
+      case "Escape":
+        setIsOpen(false);
+        setActiveIndex(-1);
+        inputRef.current?.blur();
+        break;
+    }
   }
 
   return (
     <header className="sticky top-0 z-30 h-16 border-b border-gray-200 bg-white/80 backdrop-blur-md">
-      <div className="flex h-full items-center justify-between px-6">
-        <div>
+      <div className="flex h-full items-center justify-between px-4 lg:px-6">
+        <div className="ml-10 lg:ml-0">
           <h1 className="text-lg font-bold text-gray-900">{title}</h1>
           {description && (
-            <p className="text-xs text-gray-500">{description}</p>
+            <p className="text-xs text-gray-500 hidden sm:block">
+              {description}
+            </p>
           )}
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 lg:gap-3">
           {/* Global Search */}
           <div className="relative" ref={containerRef}>
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 z-10" />
             <input
+              ref={inputRef}
               type="text"
-              placeholder="통합 검색... (상품, 회원, 주문)"
+              placeholder="통합 검색..."
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value);
                 setIsOpen(true);
+                setActiveIndex(-1);
               }}
               onFocus={() => {
                 if (query.length >= 2) setIsOpen(true);
               }}
-              className="h-9 w-72 rounded-lg border border-gray-200 bg-gray-50 pl-9 pr-8 text-sm outline-none focus:border-brand-primary focus:bg-white focus:ring-1 focus:ring-brand-primary/30 transition-all"
+              onKeyDown={handleKeyDown}
+              className="h-9 w-40 sm:w-56 lg:w-72 rounded-lg border border-gray-200 bg-gray-50 pl-9 pr-8 text-sm outline-none focus:border-brand-primary focus:bg-white focus:ring-1 focus:ring-brand-primary/30 transition-all"
+              role="combobox"
+              aria-controls="search-results-listbox"
+              aria-expanded={isOpen}
+              aria-autocomplete="list"
+              aria-activedescendant={
+                activeIndex >= 0 ? `search-result-${activeIndex}` : undefined
+              }
             />
             {query && (
               <button
@@ -172,6 +214,7 @@ export default function Header({ title, description }: HeaderProps) {
                   setQuery("");
                   setResults([]);
                   setIsOpen(false);
+                  setActiveIndex(-1);
                 }}
                 className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 text-gray-400 hover:text-gray-600"
               >
@@ -181,7 +224,11 @@ export default function Header({ title, description }: HeaderProps) {
 
             {/* Search Results Dropdown */}
             {isOpen && query.length >= 2 && (
-              <div className="absolute top-full right-0 mt-1 w-96 bg-white rounded-xl border border-gray-200 shadow-xl overflow-hidden z-50">
+              <div
+                className="absolute top-full right-0 mt-1 w-80 sm:w-96 bg-white rounded-xl border border-gray-200 shadow-xl overflow-hidden z-50"
+                role="listbox"
+                id="search-results-listbox"
+              >
                 {isSearching && (
                   <div className="p-4 text-center">
                     <Loader2 className="h-5 w-5 animate-spin text-brand-primary mx-auto" />
@@ -198,14 +245,21 @@ export default function Header({ title, description }: HeaderProps) {
                 )}
                 {!isSearching && results.length > 0 && (
                   <div className="max-h-80 overflow-y-auto">
-                    {results.map((result) => {
+                    {results.map((result, idx) => {
                       const config = typeConfig[result.type];
                       const Icon = config.icon;
+                      const isActive = idx === activeIndex;
                       return (
                         <button
+                          id={`search-result-${idx}`}
                           key={`${result.type}-${result.id}`}
+                          role="option"
+                          aria-selected={isActive}
                           onClick={() => handleSelect(result)}
-                          className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors text-left border-b border-gray-50 last:border-b-0"
+                          onMouseEnter={() => setActiveIndex(idx)}
+                          className={`w-full flex items-center gap-3 px-4 py-3 transition-colors text-left border-b border-gray-50 last:border-b-0 ${
+                            isActive ? "bg-gray-100" : "hover:bg-gray-50"
+                          }`}
                         >
                           <div className={`rounded-lg p-1.5 ${config.color}`}>
                             <Icon className="h-3.5 w-3.5" />
@@ -226,6 +280,9 @@ export default function Header({ title, description }: HeaderProps) {
                         </button>
                       );
                     })}
+                    <div className="px-4 py-2 text-[10px] text-gray-400 bg-gray-50 border-t border-gray-100">
+                      ↑↓ 이동 · Enter 선택 · Esc 닫기
+                    </div>
                   </div>
                 )}
               </div>
@@ -239,7 +296,7 @@ export default function Header({ title, description }: HeaderProps) {
           </button>
 
           {/* Profile */}
-          <div className="flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-1.5">
+          <div className="hidden sm:flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-1.5">
             <div className="h-7 w-7 rounded-full bg-brand-primary/20 flex items-center justify-center">
               <span className="text-xs font-bold text-brand-primary">관</span>
             </div>
