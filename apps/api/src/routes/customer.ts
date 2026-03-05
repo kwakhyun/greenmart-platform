@@ -137,6 +137,22 @@ router.get("/promotions", (req: Request, res: Response) => {
 });
 
 // ============================================================
+// GET /api/customer/promotions/:id — 프로모션 상세
+// ============================================================
+router.get("/promotions/:id", (req: Request, res: Response) => {
+  const promo = promotions.find((p) => p.id === req.params.id);
+  if (!promo) {
+    res.status(404).json({
+      status: 404,
+      message: "프로모션을 찾을 수 없습니다.",
+      code: "PROMOTION_NOT_FOUND",
+    });
+    return;
+  }
+  res.json(promo);
+});
+
+// ============================================================
 // GET /api/customer/coupons — 쿠폰 목록
 // ============================================================
 router.get("/coupons", (_req: Request, res: Response) => {
@@ -178,5 +194,21 @@ router.get(
     res.json({ items: filtered, summary });
   },
 );
+
+// ============================================================
+// GET /api/customer/voc/:id — VOC 상세
+// ============================================================
+router.get("/voc/:id", (req: Request, res: Response) => {
+  const voc = customerVoices.find((v) => v.id === req.params.id);
+  if (!voc) {
+    res.status(404).json({
+      status: 404,
+      message: "VOC를 찾을 수 없습니다.",
+      code: "VOC_NOT_FOUND",
+    });
+    return;
+  }
+  res.json(voc);
+});
 
 export default router;

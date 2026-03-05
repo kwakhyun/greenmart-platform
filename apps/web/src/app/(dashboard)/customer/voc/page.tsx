@@ -12,6 +12,7 @@ import {
   Clock,
   Loader2,
 } from "lucide-react";
+import Link from "next/link";
 
 const typeConfig: Record<
   string,
@@ -140,9 +141,10 @@ export default function VocPage() {
               const config = typeConfig[voc.type];
               const Icon = config.icon;
               return (
-                <article
+                <Link
                   key={voc.id}
-                  className="card p-4 hover:shadow-md transition-shadow cursor-pointer"
+                  href={`/customer/voc/${voc.id}`}
+                  className="card p-4 hover:shadow-md transition-shadow block"
                 >
                   <div className="flex items-start gap-4">
                     <div
@@ -202,7 +204,7 @@ export default function VocPage() {
                       )}
                     </div>
                   </div>
-                </article>
+                </Link>
               );
             })}
             {vocList.length === 0 && (

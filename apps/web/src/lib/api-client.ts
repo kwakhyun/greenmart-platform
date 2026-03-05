@@ -267,6 +267,10 @@ export const settlementApi = {
     );
   },
 
+  getSettlement(id: string): Promise<Settlement> {
+    return fetchApi<Settlement>(`/settlement/settlements/${id}`);
+  },
+
   getDashboard(): Promise<DashboardSummary> {
     return fetchApi<DashboardSummary>("/settlement/dashboard");
   },
@@ -340,6 +344,10 @@ export const promotionApi = {
     return fetchApi<Promotion[]>(`/customer/promotions${qs}`);
   },
 
+  getPromotion(id: string): Promise<Promotion> {
+    return fetchApi<Promotion>(`/customer/promotions/${id}`);
+  },
+
   getCoupons(): Promise<Coupon[]> {
     return fetchApi<Coupon[]>("/customer/coupons");
   },
@@ -348,6 +356,10 @@ export const promotionApi = {
     return fetchApi<VocListResponse>(
       `/customer/voc${toQueryString(params as Record<string, string | number | undefined>)}`,
     );
+  },
+
+  getVocItem(id: string): Promise<CustomerVoice> {
+    return fetchApi<CustomerVoice>(`/customer/voc/${id}`);
   },
 };
 

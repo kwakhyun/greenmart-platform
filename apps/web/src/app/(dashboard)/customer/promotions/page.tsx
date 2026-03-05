@@ -4,6 +4,7 @@ import Header from "@/components/layout/Header";
 import { usePromotions, useCoupons } from "@/hooks";
 import { cn, formatCurrency, formatDate } from "@/lib/utils";
 import { Tag, Percent, Gift, Zap, Truck, Users, Loader2 } from "lucide-react";
+import Link from "next/link";
 
 const promoTypeIcons: Record<string, typeof Tag> = {
   DISCOUNT: Percent,
@@ -56,9 +57,10 @@ export default function PromotionsPage() {
                     ? (promo.participantCount / promo.maxParticipants) * 100
                     : null;
                   return (
-                    <article
+                    <Link
                       key={promo.id}
-                      className="card overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
+                      href={`/customer/promotions/${promo.id}`}
+                      className="card overflow-hidden hover:shadow-md transition-shadow block"
                     >
                       {promo.bannerImageUrl && (
                         <div className="h-32 bg-gray-100 overflow-hidden">
@@ -115,7 +117,7 @@ export default function PromotionsPage() {
                           </div>
                         )}
                       </div>
-                    </article>
+                    </Link>
                   );
                 })}
             </div>

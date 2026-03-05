@@ -158,6 +158,22 @@ router.get(
 );
 
 // ============================================================
+// GET /api/settlement/settlements/:id — 정산 상세
+// ============================================================
+router.get("/settlements/:id", (req: Request, res: Response) => {
+  const settlement = settlements.find((s) => s.id === req.params.id);
+  if (!settlement) {
+    res.status(404).json({
+      status: 404,
+      message: "정산 내역을 찾을 수 없습니다.",
+      code: "SETTLEMENT_NOT_FOUND",
+    });
+    return;
+  }
+  res.json(settlement);
+});
+
+// ============================================================
 // GET /api/settlement/dashboard — 대시보드 요약
 // ============================================================
 router.get("/dashboard", (_req: Request, res: Response) => {

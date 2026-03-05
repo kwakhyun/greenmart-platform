@@ -22,5 +22,15 @@ export {
   useDeliveries,
   useDelivery,
 } from "./useInventoryQueries";
-export { usePromotions, useCoupons, useVoc } from "./usePromotionQueries";
-export { useSettlements, useDashboard } from "./useSettlementQueries";
+export {
+  usePromotions,
+  usePromotion,
+  useCoupons,
+  useVoc,
+  useVocItem,
+} from "./usePromotionQueries";
+export {
+  useSettlements,
+  useSettlement,
+  useDashboard,
+} from "./useSettlementQueries";

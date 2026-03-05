@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { exportToCSV } from "@/lib/export-excel";
 import { useToast } from "@/components/ui/Toast";
+import Link from "next/link";
 
 export default function SettlementsPage() {
   const [periodFilter, setPeriodFilter] = useState("");
@@ -219,9 +220,12 @@ export default function SettlementsPage() {
                     >
                       <td className="table-cell">
                         <div>
-                          <p className="text-sm font-semibold text-gray-900">
+                          <Link
+                            href={`/settlement/settlements/${stl.id}`}
+                            className="text-sm font-semibold text-gray-900 hover:text-brand-primary transition-colors"
+                          >
                             {stl.partnerName}
-                          </p>
+                          </Link>
                           <p className="text-[10px] text-gray-400">
                             {stl.period}
                           </p>
