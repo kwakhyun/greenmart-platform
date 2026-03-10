@@ -290,10 +290,10 @@ export default function Header({ title, description }: HeaderProps) {
             href="https://github.com/kwakhyun/greenmart-platform"
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-lg p-2 hover:bg-gray-100 transition-colors"
-            aria-label="GitHub 저장소"
+            className="group inline-flex items-center gap-2 rounded-lg bg-gray-900 px-4 py-2 text-sm font-semibold text-white shadow-md hover:bg-gray-800 hover:shadow-lg hover:scale-[1.03] active:scale-[0.98] transition-all duration-200"
           >
-            <Github className="h-5 w-5 text-gray-500" />
+            <Github className="h-[18px] w-[18px] transition-transform duration-200 group-hover:rotate-[360deg]" />
+            <span className="hidden sm:inline">GitHub Repo</span>
           </a>
 
           <div className="hidden sm:flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-1.5">
