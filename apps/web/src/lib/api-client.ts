@@ -18,10 +18,6 @@ import type {
 } from "@greenmart/shared";
 import type { CustomerFormData, ProductFormData } from "@greenmart/shared";
 
-// ============================================================
-// API Client — 프론트엔드에서 백엔드 API 호출
-// ============================================================
-
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api";
 
@@ -67,10 +63,6 @@ async function fetchApi<T>(
 
   return res.json() as Promise<T>;
 }
-
-// ============================================================
-// Catalog API
-// ============================================================
 
 export interface ProductListParams {
   page?: number;
@@ -140,10 +132,6 @@ export const catalogApi = {
   },
 };
 
-// ============================================================
-// Customer API
-// ============================================================
-
 export interface MemberListParams {
   page?: number;
   size?: number;
@@ -196,10 +184,6 @@ export const customerApi = {
   },
 };
 
-// ============================================================
-// Settlement (Order) API
-// ============================================================
-
 export interface OrderListParams {
   page?: number;
   size?: number;
@@ -238,10 +222,6 @@ export const orderApi = {
   },
 };
 
-// ============================================================
-// Settlement API (정산)
-// ============================================================
-
 export interface SettlementListParams {
   period?: string;
   partnerId?: string;
@@ -275,10 +255,6 @@ export const settlementApi = {
     return fetchApi<DashboardSummary>("/settlement/dashboard");
   },
 };
-
-// ============================================================
-// Inventory API (재고/배송)
-// ============================================================
 
 export interface StockListParams {
   warehouseId?: string;
@@ -317,10 +293,6 @@ export const inventoryApi = {
     return fetchApi<Delivery>(`/inventory/deliveries/${id}`);
   },
 };
-
-// ============================================================
-// Customer API (프로모션/쿠폰/VOC)
-// ============================================================
 
 export interface VocListParams {
   type?: string;

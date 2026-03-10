@@ -88,7 +88,6 @@ export default function DeliveryDetailPage() {
         description={`인벤토리 플랫폼 · ${delivery.trackingNumber || delivery.id}`}
       />
       <div className="p-6 space-y-6 animate-fade-in">
-        {/* Back */}
         <Link
           href="/inventory/delivery"
           className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 transition-colors"
@@ -97,7 +96,6 @@ export default function DeliveryDetailPage() {
           배송 목록
         </Link>
 
-        {/* Delivery Header */}
         <div className="card p-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
@@ -136,7 +134,6 @@ export default function DeliveryDetailPage() {
           </div>
         </div>
 
-        {/* Progress Stepper */}
         {!isReturned && (
           <div className="card p-6 overflow-x-auto">
             <h3 className="text-sm font-semibold text-gray-900 mb-4">
@@ -189,7 +186,6 @@ export default function DeliveryDetailPage() {
           </div>
         )}
 
-        {/* Stats Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="stat-card">
             <div className="flex items-center justify-between">
@@ -245,9 +241,7 @@ export default function DeliveryDetailPage() {
           </div>
         </div>
 
-        {/* Shipping & Recipient Info */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Recipient */}
           <div className="card p-5">
             <h3 className="text-sm font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <User className="h-4 w-4 text-gray-400" />
@@ -275,7 +269,6 @@ export default function DeliveryDetailPage() {
             </div>
           </div>
 
-          {/* Sender / Warehouse */}
           <div className="card p-5">
             <h3 className="text-sm font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <Warehouse className="h-4 w-4 text-gray-400" />
@@ -309,7 +302,6 @@ export default function DeliveryDetailPage() {
           </div>
         </div>
 
-        {/* Timeline */}
         {delivery.timeline && delivery.timeline.length > 0 && (
           <div className="card p-5">
             <h3 className="text-sm font-semibold text-gray-900 mb-4 flex items-center gap-2">
@@ -317,7 +309,6 @@ export default function DeliveryDetailPage() {
               배송 이력
             </h3>
             <div className="relative pl-8">
-              {/* vertical line */}
               <div className="absolute left-[11px] top-3 bottom-3 w-0.5 bg-gray-200" />
 
               <div className="space-y-5">
@@ -364,7 +355,6 @@ export default function DeliveryDetailPage() {
           </div>
         )}
 
-        {/* Timestamps */}
         <div className="card p-5">
           <h3 className="text-sm font-semibold text-gray-900 mb-4 flex items-center gap-2">
             <Clock className="h-4 w-4 text-gray-400" />

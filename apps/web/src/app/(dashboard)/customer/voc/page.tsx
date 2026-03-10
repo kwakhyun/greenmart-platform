@@ -100,7 +100,6 @@ export default function VocPage() {
           ))}
         </div>
 
-        {/* Filters */}
         <div className="card p-4 flex flex-wrap items-center gap-3">
           <select
             value={typeFilter}

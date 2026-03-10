@@ -1,10 +1,8 @@
 export default function DashboardLoading() {
   return (
     <div className="p-6 space-y-6 animate-pulse">
-      {/* Header skeleton */}
       <div className="h-16 bg-white border-b border-gray-200" />
 
-      {/* KPI Cards skeleton */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {Array.from({ length: 4 }).map((_, i) => (
           <div key={i} className="card p-5 space-y-3">
@@ -17,7 +15,6 @@ export default function DashboardLoading() {
         ))}
       </div>
 
-      {/* Charts skeleton */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="card p-5">
           <div className="h-4 w-28 bg-gray-200 rounded mb-4" />

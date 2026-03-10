@@ -1,9 +1,5 @@
 import type { ProductTag } from "@/types/catalog";
 
-// ============================================================
-// 상품 태그 라벨 및 색상 매핑
-// ============================================================
-
 export const TAG_LABELS: Record<ProductTag, string> = {
   BEST: "BEST",
   NEW: "NEW",
@@ -24,10 +20,6 @@ export const TAG_COLORS: Record<ProductTag, string> = {
   GLOBAL: "bg-indigo-100 text-indigo-700",
 };
 
-// ============================================================
-// 회원 등급 색상 매핑
-// ============================================================
-
 export const GRADE_COLORS: Record<string, string> = {
   BRONZE: "bg-gray-100 text-gray-700",
   SILVER: "bg-green-100 text-green-700",
@@ -35,20 +27,12 @@ export const GRADE_COLORS: Record<string, string> = {
   PLATINUM: "bg-purple-100 text-purple-700",
 };
 
-// ============================================================
-// 재고 상태 라벨
-// ============================================================
-
 export const STOCK_STATUS_LABELS: Record<string, string> = {
   IN_STOCK: "정상",
   LOW_STOCK: "부족",
   OUT_OF_STOCK: "품절",
   RESERVED: "예약",
 };
-
-// ============================================================
-// 배송 타입 라벨
-// ============================================================
 
 export const DELIVERY_TYPE_LABELS: Record<string, string> = {
   STANDARD: "일반배송",

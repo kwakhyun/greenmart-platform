@@ -6,9 +6,6 @@ import type {
   SalesChannel,
 } from "@greenmart/shared";
 
-// ============================================================
-// 카테고리 데이터
-// ============================================================
 export const categories: Category[] = [
   {
     id: "cat-1",
@@ -146,9 +143,6 @@ export const categories: Category[] = [
   },
 ];
 
-// ============================================================
-// 브랜드 데이터
-// ============================================================
 export const brands: Brand[] = [
   {
     id: "br-1",
@@ -242,9 +236,6 @@ export const brands: Brand[] = [
   },
 ];
 
-// ============================================================
-// 상품 데이터
-// ============================================================
 function createProduct(
   overrides: Partial<Product> &
     Pick<Product, "id" | "name" | "brand" | "category">,

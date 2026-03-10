@@ -69,7 +69,6 @@ export default function SettlementDetailPage() {
     );
   }
 
-  // 정산 금액 브레이크다운
   const breakdown = [
     {
       label: "총 매출",
@@ -125,7 +124,6 @@ export default function SettlementDetailPage() {
     <>
       <Header title="정산 상세" description="세틀먼트 플랫폼" />
       <div className="p-6 space-y-6 animate-fade-in">
-        {/* Back */}
         <Link
           href="/settlement/settlements"
           className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 transition-colors"
@@ -134,7 +132,6 @@ export default function SettlementDetailPage() {
           정산 목록
         </Link>
 
-        {/* Title Card */}
         <div className="card p-6">
           <div className="flex items-start justify-between flex-wrap gap-4">
             <div className="flex items-start gap-4">
@@ -160,7 +157,6 @@ export default function SettlementDetailPage() {
           </div>
         </div>
 
-        {/* Key Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="card p-4 text-center">
             <div className="flex items-center justify-center gap-2 mb-2">
@@ -201,7 +197,6 @@ export default function SettlementDetailPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* 정산 금액 브레이크다운 - 2/3 */}
           <div className="lg:col-span-2 card p-6">
             <h3 className="text-sm font-semibold text-gray-900 mb-5 flex items-center gap-2">
               <Calculator className="h-4 w-4 text-gray-400" />
@@ -237,7 +232,6 @@ export default function SettlementDetailPage() {
                 );
               })}
 
-              {/* Net Amount */}
               <div className="flex items-center justify-between pt-4 mt-2 border-t-2 border-gray-200">
                 <div className="flex items-center gap-3">
                   <div className="rounded-lg p-2 bg-green-100">
@@ -253,7 +247,6 @@ export default function SettlementDetailPage() {
               </div>
             </div>
 
-            {/* 수수료율 비주얼 */}
             <div className="mt-6 p-4 bg-gray-50 rounded-lg">
               <div className="flex justify-between text-xs text-gray-500 mb-2">
                 <span>수수료율</span>
@@ -273,9 +266,7 @@ export default function SettlementDetailPage() {
             </div>
           </div>
 
-          {/* 오른쪽 사이드 - 1/3 */}
           <div className="space-y-6">
-            {/* 기본 정보 */}
             <div className="card p-5 space-y-4">
               <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
                 <Building2 className="h-4 w-4 text-gray-400" />
@@ -317,7 +308,6 @@ export default function SettlementDetailPage() {
               </div>
             </div>
 
-            {/* 정산 진행 상태 */}
             <div className="card p-5">
               <h3 className="text-sm font-semibold text-gray-900 mb-4">
                 정산 진행 상태

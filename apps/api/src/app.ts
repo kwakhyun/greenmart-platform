@@ -15,9 +15,6 @@ import { logger } from "./lib/logger";
 export function createApp() {
   const app = express();
 
-  // ============================================================
-  // 글로벌 미들웨어
-  // ============================================================
   app.use(
     helmet({
       crossOriginResourcePolicy: { policy: "cross-origin" },
@@ -37,7 +34,6 @@ export function createApp() {
     }),
   );
 
-  // Preflight OPTIONS 요청 명시적 처리
   app.options("*", cors({
     origin: allowedOrigins,
     credentials: true,
@@ -52,9 +48,6 @@ export function createApp() {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
-  // ============================================================
-  // Swagger API 문서
-  // ============================================================
   app.use(
     "/api/docs",
     swaggerUi.serve,
@@ -64,9 +57,6 @@ export function createApp() {
     }),
   );
 
-  // ============================================================
-  // Health check
-  // ============================================================
   app.get("/api/health", (_req, res) => {
     res.json({
       status: "ok",
@@ -75,17 +65,11 @@ export function createApp() {
     });
   });
 
-  // ============================================================
-  // 도메인별 라우터
-  // ============================================================
   app.use("/api/catalog", catalogRouter);
   app.use("/api/customer", customerRouter);
   app.use("/api/inventory", inventoryRouter);
   app.use("/api/settlement", settlementRouter);
 
-  // ============================================================
-  // 에러 핸들링
-  // ============================================================
   app.use(notFoundHandler);
   app.use(errorHandler);
 

@@ -55,7 +55,6 @@ export default function DashboardPage() {
     <>
       <Header title="대시보드" description="코어 플랫폼 실시간 현황" />
       <div className="p-6 space-y-6 animate-fade-in">
-        {/* KPI Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard
             title="오늘 매출"
@@ -91,13 +90,11 @@ export default function DashboardPage() {
           />
         </div>
 
-        {/* Charts Row */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <SalesChart monthlySales={summary.monthlySales} />
           <CategoryPieChart categoryBreakdown={summary.categoryBreakdown} />
         </div>
 
-        {/* Bottom Row */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <TopProductsTable topProducts={summary.topProducts} />
           <RecentOrdersTable recentOrders={summary.recentOrders} />

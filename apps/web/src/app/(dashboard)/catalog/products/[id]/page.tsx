@@ -78,7 +78,6 @@ export default function ProductDetailPage() {
         description={`카탈로그 플랫폼 · ${product.id}`}
       />
       <div className="p-6 space-y-6 animate-fade-in">
-        {/* Back + Actions */}
         <div className="flex items-center justify-between">
           <Link
             href="/catalog/products"
@@ -105,9 +104,7 @@ export default function ProductDetailPage() {
           </div>
         </div>
 
-        {/* Product Info */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Image */}
           <div className="card overflow-hidden">
             <div className="aspect-square bg-gray-100 relative">
               {product.images[0]?.url ? (
@@ -133,10 +130,8 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          {/* Details */}
           <div className="space-y-4">
             <div className="card p-5 space-y-4">
-              {/* Brand & Category */}
               <div className="flex items-center gap-2 text-xs text-gray-500">
                 <span className="font-medium text-brand-primary">
                   {product.brand.name}
@@ -145,12 +140,10 @@ export default function ProductDetailPage() {
                 <span>{product.category.name}</span>
               </div>
 
-              {/* Name */}
               <h1 className="text-xl font-bold text-gray-900">
                 {product.name}
               </h1>
 
-              {/* Tags */}
               <div className="flex flex-wrap gap-1.5">
                 {product.tags.map((tag) => (
                   <span
@@ -162,7 +155,6 @@ export default function ProductDetailPage() {
                 ))}
               </div>
 
-              {/* Price */}
               <div className="flex items-end gap-3">
                 {product.discountRate > 0 && (
                   <>
@@ -179,7 +171,6 @@ export default function ProductDetailPage() {
                 </span>
               </div>
 
-              {/* Rating */}
               <div className="flex items-center gap-2">
                 <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
                 <span className="text-lg font-bold text-gray-900">
@@ -190,7 +181,6 @@ export default function ProductDetailPage() {
                 </span>
               </div>
 
-              {/* Sales Channels */}
               <div className="flex gap-2">
                 {product.salesChannels.map((ch) => (
                   <span key={ch} className="badge bg-gray-100 text-gray-600">
@@ -203,7 +193,6 @@ export default function ProductDetailPage() {
                 ))}
               </div>
 
-              {/* Volume & Skin Type */}
               {(product.volume || product.skinType) && (
                 <div className="border-t border-gray-100 pt-4 space-y-2">
                   {product.volume && (
@@ -224,7 +213,6 @@ export default function ProductDetailPage() {
               )}
             </div>
 
-            {/* Review Distribution */}
             <div className="card p-5">
               <h3 className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
                 <BarChart3 className="h-4 w-4" />
@@ -250,7 +238,6 @@ export default function ProductDetailPage() {
               </div>
             </div>
 
-            {/* Options (if exists) */}
             {product.options.length > 0 && (
               <div className="card p-5">
                 <h3 className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
@@ -280,7 +267,6 @@ export default function ProductDetailPage() {
           </div>
         </div>
 
-        {/* Description */}
         <div className="card p-5">
           <h3 className="text-sm font-semibold text-gray-900 mb-3">
             상품 설명
@@ -290,7 +276,6 @@ export default function ProductDetailPage() {
           </p>
         </div>
 
-        {/* Delete Modal */}
         <Modal
           isOpen={showDeleteModal}
           onClose={() => setShowDeleteModal(false)}
@@ -341,7 +326,6 @@ export default function ProductDetailPage() {
           </div>
         </Modal>
 
-        {/* Edit Modal */}
         <ProductFormModal
           isOpen={isEditOpen}
           onClose={() => setIsEditOpen(false)}

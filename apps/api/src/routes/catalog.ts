@@ -8,9 +8,6 @@ import { CatalogRepository } from "../repositories/catalog.repository";
 const router = Router();
 const catalogService = new CatalogService(new CatalogRepository());
 
-// ============================================================
-// GET /api/catalog/products — 상품 목록 조회 (필터, 검색, 페이지네이션)
-// ============================================================
 const ProductListQuerySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
   size: z.coerce.number().int().min(1).max(100).default(12),
@@ -41,9 +38,6 @@ router.get(
   },
 );
 
-// ============================================================
-// GET /api/catalog/products/:id — 상품 상세
-// ============================================================
 router.get(
   "/products/:id",
   (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
@@ -56,9 +50,6 @@ router.get(
   },
 );
 
-// ============================================================
-// POST /api/catalog/products — 상품 등록
-// ============================================================
 router.post(
   "/products",
   validate({ body: ProductFormSchema }),
@@ -72,9 +63,6 @@ router.post(
   },
 );
 
-// ============================================================
-// PUT /api/catalog/products/:id — 상품 수정
-// ============================================================
 router.put(
   "/products/:id",
   validate({ body: ProductFormSchema }),
@@ -88,9 +76,6 @@ router.put(
   },
 );
 
-// ============================================================
-// DELETE /api/catalog/products/:id — 상품 삭제
-// ============================================================
 router.delete(
   "/products/:id",
   (req: Request<{ id: string }>, res: Response, next: NextFunction) => {
@@ -103,16 +88,10 @@ router.delete(
   },
 );
 
-// ============================================================
-// GET /api/catalog/categories — 카테고리 목록
-// ============================================================
 router.get("/categories", (_req: Request, res: Response) => {
   res.json(catalogService.getCategories());
 });
 
-// ============================================================
-// GET /api/catalog/brands — 브랜드 목록
-// ============================================================
 router.get("/brands", (_req: Request, res: Response) => {
   res.json(catalogService.getBrands());
 });

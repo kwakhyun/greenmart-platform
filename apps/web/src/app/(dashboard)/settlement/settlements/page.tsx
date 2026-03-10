@@ -49,7 +49,6 @@ export default function SettlementsPage() {
         description="세틀먼트 플랫폼 · 비즈니스 모델 유연 정산 시스템"
       />
       <div className="p-6 space-y-6 animate-fade-in">
-        {/* Summary Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="stat-card">
             <div className="flex items-center justify-between">
@@ -101,7 +100,6 @@ export default function SettlementsPage() {
           </div>
         </div>
 
-        {/* Filters */}
         <div className="card p-4 flex flex-wrap items-center gap-3">
           <Filter className="h-4 w-4 text-gray-400" />
           <select
@@ -163,7 +161,6 @@ export default function SettlementsPage() {
           </button>
         </div>
 
-        {/* Loading */}
         {isLoading && (
           <div className="card p-16 text-center">
             <Loader2 className="h-8 w-8 text-brand-primary animate-spin mx-auto mb-4" />
@@ -173,7 +170,6 @@ export default function SettlementsPage() {
           </div>
         )}
 
-        {/* Error */}
         {isError && (
           <div className="card p-16 text-center">
             <h3 className="text-sm font-semibold text-gray-900 mb-1">
@@ -187,7 +183,6 @@ export default function SettlementsPage() {
           </div>
         )}
 
-        {/* Settlement Table */}
         {!isLoading && !isError && settlements.length > 0 && (
           <div className="card overflow-hidden">
             <div className="p-4 border-b border-gray-200">
@@ -316,7 +311,6 @@ export default function SettlementsPage() {
           </div>
         )}
 
-        {/* Empty State */}
         {!isLoading && !isError && settlements.length === 0 && (
           <div className="card p-16 text-center">
             <DollarSign className="h-12 w-12 text-gray-300 mx-auto mb-4" />
@@ -329,7 +323,6 @@ export default function SettlementsPage() {
           </div>
         )}
 
-        {/* Settlement Flow */}
         <div className="card p-5">
           <h3 className="text-sm font-semibold text-gray-900 mb-4">
             정산 프로세스

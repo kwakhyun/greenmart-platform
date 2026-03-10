@@ -8,7 +8,6 @@ interface CatalogState {
   currentPage: number;
   pageSize: number;
 
-  // Actions
   setFilter: (filter: Partial<ProductFilter>) => void;
   resetFilter: () => void;
   setPage: (page: number) => void;
@@ -40,7 +39,6 @@ export const useCatalogStore = create<CatalogState>((set, get) => ({
     const { products, filter, currentPage, pageSize } = get();
     let filtered = [...products];
 
-    // 검색어 필터
     if (filter.search) {
       const search = filter.search.toLowerCase();
       filtered = filtered.filter(
@@ -51,17 +49,14 @@ export const useCatalogStore = create<CatalogState>((set, get) => ({
       );
     }
 
-    // 카테고리 필터
     if (filter.categoryId) {
       filtered = filtered.filter((p) => p.category.id === filter.categoryId);
     }
 
-    // 브랜드 필터
     if (filter.brandId) {
       filtered = filtered.filter((p) => p.brand.id === filter.brandId);
     }
 
-    // 가격 필터
     if (filter.minPrice !== undefined) {
       filtered = filtered.filter((p) => p.salePrice >= filter.minPrice!);
     }
@@ -69,21 +64,18 @@ export const useCatalogStore = create<CatalogState>((set, get) => ({
       filtered = filtered.filter((p) => p.salePrice <= filter.maxPrice!);
     }
 
-    // 태그 필터
     if (filter.tags && filter.tags.length > 0) {
       filtered = filtered.filter((p) =>
         filter.tags!.some((tag) => p.tags.includes(tag)),
       );
     }
 
-    // 채널 필터
     if (filter.channels && filter.channels.length > 0) {
       filtered = filtered.filter((p) =>
         filter.channels!.some((ch) => p.salesChannels.includes(ch)),
       );
     }
 
-    // 정렬
     switch (filter.sortBy) {
       case "price_asc":
         filtered.sort((a, b) => a.salePrice - b.salePrice);

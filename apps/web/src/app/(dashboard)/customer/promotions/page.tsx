@@ -42,7 +42,6 @@ export default function PromotionsPage() {
           </div>
         )}
 
-        {/* Active Promotions */}
         {!isLoading && promotions && (
           <section>
             <h2 className="text-sm font-semibold text-gray-900 mb-3">
@@ -124,7 +123,6 @@ export default function PromotionsPage() {
           </section>
         )}
 
-        {/* Coupons */}
         {!isLoading && coupons && (
           <section>
             <h2 className="text-sm font-semibold text-gray-900 mb-3">

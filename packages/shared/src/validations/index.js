@@ -2,9 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PaginationQuerySchema = exports.ApiErrorSchema = exports.SettlementQuerySchema = exports.OrderFilterSchema = exports.CustomerSearchSchema = exports.ProductFormSchema = void 0;
 const zod_1 = require("zod");
-// ============================================================
-// Zod 런타임 검증 스키마 - 폼 입력 및 API 요청/응답 검증
-// ============================================================
 /** 상품 등록/수정 폼 스키마 */
 exports.ProductFormSchema = zod_1.z
     .object({

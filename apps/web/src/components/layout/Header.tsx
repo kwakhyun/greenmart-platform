@@ -10,6 +10,7 @@ import {
   Truck,
   X,
   Loader2,
+  Github,
 } from "lucide-react";
 import { useDebounce } from "@/hooks";
 import { catalogApi, customerApi, orderApi } from "@/lib/api-client";
@@ -120,7 +121,6 @@ export default function Header({ title, description }: HeaderProps) {
     performSearch(debouncedQuery);
   }, [debouncedQuery, performSearch]);
 
-  // 외부 클릭 시 닫기
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (
@@ -181,7 +181,6 @@ export default function Header({ title, description }: HeaderProps) {
         </div>
 
         <div className="flex items-center gap-2 lg:gap-3">
-          {/* Global Search */}
           <div className="relative" ref={containerRef}>
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 z-10" />
             <input
@@ -221,7 +220,6 @@ export default function Header({ title, description }: HeaderProps) {
               </button>
             )}
 
-            {/* Search Results Dropdown */}
             {isOpen && query.length >= 2 && (
               <div
                 className="absolute top-full right-0 mt-1 w-80 sm:w-96 bg-white rounded-xl border border-gray-200 shadow-xl overflow-hidden z-50"
@@ -288,7 +286,16 @@ export default function Header({ title, description }: HeaderProps) {
             )}
           </div>
 
-          {/* Profile */}
+          <a
+            href="https://github.com/kwakhyun/greenmart-platform"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-lg p-2 hover:bg-gray-100 transition-colors"
+            aria-label="GitHub 저장소"
+          >
+            <Github className="h-5 w-5 text-gray-500" />
+          </a>
+
           <div className="hidden sm:flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-1.5">
             <div className="h-7 w-7 rounded-full bg-brand-primary/20 flex items-center justify-center">
               <span className="text-xs font-bold text-brand-primary">관</span>

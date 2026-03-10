@@ -38,7 +38,6 @@ export class CatalogService {
   getProducts(params: ProductListParams): PaginatedResponse<Product> {
     let filtered = this.repo.findAllProducts();
 
-    // 검색어 필터
     if (params.search) {
       const s = params.search.toLowerCase();
       filtered = filtered.filter(
@@ -49,17 +48,14 @@ export class CatalogService {
       );
     }
 
-    // 카테고리 필터
     if (params.categoryId) {
       filtered = filtered.filter((p) => p.category.id === params.categoryId);
     }
 
-    // 브랜드 필터
     if (params.brandId) {
       filtered = filtered.filter((p) => p.brand.id === params.brandId);
     }
 
-    // 태그 필터
     if (params.tags) {
       const tagArr = params.tags.split(",");
       filtered = filtered.filter((p) =>
@@ -67,7 +63,6 @@ export class CatalogService {
       );
     }
 
-    // 채널 필터
     if (params.channels) {
       const chArr = params.channels.split(",");
       filtered = filtered.filter((p) =>
@@ -77,15 +72,12 @@ export class CatalogService {
       );
     }
 
-    // 상태 필터
     if (params.status) {
       filtered = filtered.filter((p) => p.status === params.status);
     }
 
-    // 정렬
     this.sortProducts(filtered, params.sortBy);
 
-    // 페이지네이션
     const totalItems = filtered.length;
     const totalPages = Math.ceil(totalItems / params.size);
     const start = (params.page - 1) * params.size;

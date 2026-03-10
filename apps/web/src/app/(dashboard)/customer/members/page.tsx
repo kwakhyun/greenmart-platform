@@ -53,7 +53,6 @@ export default function MembersPage() {
         description="커스터머 플랫폼 · 온/오프라인 회원 통합 관리"
       />
       <div className="p-6 space-y-6 animate-fade-in">
-        {/* Grade Summary */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {[
             {
@@ -98,7 +97,6 @@ export default function MembersPage() {
           ))}
         </div>
 
-        {/* Filters */}
         <div className="card p-4 flex flex-wrap items-center gap-3">
           <div className="relative flex-1 min-w-[200px]">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
@@ -171,7 +169,6 @@ export default function MembersPage() {
           </button>
         </div>
 
-        {/* Loading */}
         {isLoading && (
           <div className="card p-16 text-center">
             <Loader2 className="h-8 w-8 text-brand-primary animate-spin mx-auto mb-4" />
@@ -179,7 +176,6 @@ export default function MembersPage() {
           </div>
         )}
 
-        {/* Error */}
         {isError && (
           <div className="card p-16 text-center">
             <h3 className="text-sm font-semibold text-gray-900 mb-1">
@@ -193,7 +189,6 @@ export default function MembersPage() {
           </div>
         )}
 
-        {/* Table */}
         {!isLoading && !isError && (
           <div className="card overflow-hidden">
             <div className="overflow-x-auto">
@@ -299,13 +294,11 @@ export default function MembersPage() {
         )}
       </div>
 
-      {/* Customer Form Modal */}
       <CustomerFormModal
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}
       />
 
-      {/* Delete Confirm Modal */}
       <ConfirmDeleteModal
         isOpen={!!deleteTarget}
         onClose={() => setDeleteTarget(null)}

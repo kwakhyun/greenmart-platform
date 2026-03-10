@@ -71,7 +71,6 @@ export default function MemberDetailPage() {
         description={`커스터머 플랫폼 · ${member.id}`}
       />
       <div className="p-6 space-y-6 animate-fade-in">
-        {/* Back */}
         <Link
           href="/customer/members"
           className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 transition-colors"
@@ -80,7 +79,6 @@ export default function MemberDetailPage() {
           회원 목록
         </Link>
 
-        {/* Profile Card */}
         <div className="card p-6">
           <div className="flex items-start gap-6">
             <div className="h-20 w-20 rounded-full bg-brand-primary/10 flex items-center justify-center flex-shrink-0">
@@ -124,7 +122,6 @@ export default function MemberDetailPage() {
           </div>
         </div>
 
-        {/* Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="stat-card">
             <div className="flex items-center justify-between">
@@ -180,7 +177,6 @@ export default function MemberDetailPage() {
           </div>
         </div>
 
-        {/* Additional Info */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="card p-5">
             <h3 className="text-sm font-semibold text-gray-900 mb-4">

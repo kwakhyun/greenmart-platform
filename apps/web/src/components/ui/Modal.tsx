@@ -65,17 +65,14 @@ export function Modal({
         if (e.target === overlayRef.current) onClose();
       }}
     >
-      {/* Backdrop */}
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm animate-fade-in" />
 
-      {/* Content */}
       <div
         className={cn(
           "relative w-full bg-white rounded-xl shadow-2xl animate-slide-up",
           sizeMap[size],
         )}
       >
-        {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-gray-200">
           <div>
             <h2 id="modal-title" className="text-base font-bold text-gray-900">
@@ -94,7 +91,6 @@ export function Modal({
           </button>
         </div>
 
-        {/* Body */}
         <div className="p-5">{children}</div>
       </div>
     </div>

@@ -106,7 +106,6 @@ export function CustomerFormModal({ isOpen, onClose }: CustomerFormModalProps) {
       size="md"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* 이름 */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             이름 <span className="text-red-500">*</span>
@@ -123,7 +122,6 @@ export function CustomerFormModal({ isOpen, onClose }: CustomerFormModalProps) {
           )}
         </div>
 
-        {/* 이메일 */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             이메일 <span className="text-red-500">*</span>
@@ -141,7 +139,6 @@ export function CustomerFormModal({ isOpen, onClose }: CustomerFormModalProps) {
           )}
         </div>
 
-        {/* 전화번호 */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             전화번호 <span className="text-red-500">*</span>
@@ -158,7 +155,6 @@ export function CustomerFormModal({ isOpen, onClose }: CustomerFormModalProps) {
           )}
         </div>
 
-        {/* 등급 / 상태 */}
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -196,7 +192,6 @@ export function CustomerFormModal({ isOpen, onClose }: CustomerFormModalProps) {
           </div>
         </div>
 
-        {/* 가입 채널 */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             가입 채널 <span className="text-red-500">*</span>
@@ -215,7 +210,6 @@ export function CustomerFormModal({ isOpen, onClose }: CustomerFormModalProps) {
           </select>
         </div>
 
-        {/* 액션 */}
         <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
           <button type="button" onClick={onClose} className="btn-secondary">
             취소

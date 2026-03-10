@@ -132,7 +132,6 @@ export default function PromotionDetailPage() {
     <>
       <Header title="프로모션 상세" description="커스터머 플랫폼" />
       <div className="p-6 space-y-6 animate-fade-in">
-        {/* Back */}
         <Link
           href="/customer/promotions"
           className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 transition-colors"
@@ -141,7 +140,6 @@ export default function PromotionDetailPage() {
           프로모션 목록
         </Link>
 
-        {/* Banner */}
         {promo.bannerImageUrl ? (
           <div className="card overflow-hidden">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -157,7 +155,6 @@ export default function PromotionDetailPage() {
           </div>
         )}
 
-        {/* Title & Status */}
         <div className="card p-6">
           <div className="flex items-start justify-between flex-wrap gap-4">
             <div className="flex items-start gap-4">
@@ -189,7 +186,6 @@ export default function PromotionDetailPage() {
           </div>
         </div>
 
-        {/* Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="card p-4 text-center">
             <div className="flex items-center justify-center gap-2 mb-2">
@@ -238,7 +234,6 @@ export default function PromotionDetailPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Period & Progress */}
           <div className="card p-6 space-y-5">
             <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
               <Calendar className="h-4 w-4 text-gray-400" />
@@ -276,7 +271,6 @@ export default function PromotionDetailPage() {
               </div>
             </div>
 
-            {/* Participant Progress */}
             {progress !== null && (
               <div>
                 <div className="flex justify-between text-xs text-gray-400 mb-1">
@@ -304,7 +298,6 @@ export default function PromotionDetailPage() {
             )}
           </div>
 
-          {/* Target Info */}
           <div className="card p-6 space-y-5">
             <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
               <Target className="h-4 w-4 text-gray-400" />

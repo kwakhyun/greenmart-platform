@@ -154,7 +154,6 @@ export function getSettlementStatusLabel(status: string): string {
 /** 상태별 색상 클래스 */
 export function getStatusColor(status: string): string {
   const colorMap: Record<string, string> = {
-    // 주문
     PENDING: "bg-yellow-100 text-yellow-800",
     CONFIRMED: "bg-blue-100 text-blue-800",
     PROCESSING: "bg-indigo-100 text-indigo-800",
@@ -162,19 +161,15 @@ export function getStatusColor(status: string): string {
     DELIVERED: "bg-green-100 text-green-800",
     CANCELLED: "bg-red-100 text-red-800",
     REFUNDED: "bg-gray-100 text-gray-800",
-    // 재고
     IN_STOCK: "bg-green-100 text-green-800",
     LOW_STOCK: "bg-orange-100 text-orange-800",
     OUT_OF_STOCK: "bg-red-100 text-red-800",
-    // 정산
     CALCULATED: "bg-blue-100 text-blue-800",
     PAID: "bg-green-100 text-green-800",
     DISPUTED: "bg-red-100 text-red-800",
-    // 회원
     ACTIVE: "bg-green-100 text-green-800",
     DORMANT: "bg-gray-100 text-gray-800",
     WITHDRAWN: "bg-red-100 text-red-800",
-    // VOC
     IN_PROGRESS: "bg-blue-100 text-blue-800",
     RESOLVED: "bg-green-100 text-green-800",
     CLOSED: "bg-gray-100 text-gray-800",

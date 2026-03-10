@@ -72,7 +72,6 @@ export default function ProductsPage() {
         description="카탈로그 플랫폼 · 상품 데이터 허브"
       />
       <div className="p-6 space-y-6 animate-fade-in">
-        {/* Filters */}
         <div className="card p-4">
           <div className="flex flex-wrap items-center gap-3">
             <div className="relative flex-1 min-w-[240px]">
@@ -161,7 +160,6 @@ export default function ProductsPage() {
           </p>
         </div>
 
-        {/* Loading */}
         {isLoading && (
           <div className="card p-16 text-center">
             <Loader2 className="h-8 w-8 text-brand-primary animate-spin mx-auto mb-4" />
@@ -169,7 +167,6 @@ export default function ProductsPage() {
           </div>
         )}
 
-        {/* Error */}
         {isError && (
           <div className="card p-16 text-center">
             <div className="mx-auto h-16 w-16 rounded-full bg-red-100 flex items-center justify-center mb-4">
@@ -186,7 +183,6 @@ export default function ProductsPage() {
           </div>
         )}
 
-        {/* Empty State */}
         {!isLoading && !isError && filtered.length === 0 && (
           <div className="card p-16 text-center">
             <div className="mx-auto h-16 w-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
@@ -201,7 +197,6 @@ export default function ProductsPage() {
           </div>
         )}
 
-        {/* Grid View */}
         {!isLoading &&
           !isError &&
           filtered.length > 0 &&
@@ -213,7 +208,6 @@ export default function ProductsPage() {
                     className="card overflow-hidden hover:shadow-lg transition-all duration-300 group cursor-pointer"
                     aria-label={`${product.brand.name} ${product.name}`}
                   >
-                    {/* Image */}
                     <div className="relative aspect-square bg-gray-100 overflow-hidden">
                       {product.images[0]?.url ? (
                         <Image
@@ -254,7 +248,6 @@ export default function ProductsPage() {
                         </div>
                       )}
                     </div>
-                    {/* Info */}
                     <div className="p-3.5">
                       <p className="text-[10px] font-medium text-gray-400 mb-0.5">
                         {product.brand.name}
@@ -301,7 +294,6 @@ export default function ProductsPage() {
             </div>
           )}
 
-        {/* Table View */}
         {!isLoading &&
           !isError &&
           filtered.length > 0 &&
@@ -410,7 +402,6 @@ export default function ProductsPage() {
             </div>
           )}
 
-        {/* Pagination */}
         {pagination && pagination.totalPages > 1 && (
           <Pagination
             currentPage={pagination.page}
@@ -420,13 +411,11 @@ export default function ProductsPage() {
         )}
       </div>
 
-      {/* Product Form Modal */}
       <ProductFormModal
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}
       />
 
-      {/* Delete Confirm Modal */}
       <ConfirmDeleteModal
         isOpen={!!deleteTarget}
         onClose={() => setDeleteTarget(null)}

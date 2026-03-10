@@ -106,7 +106,6 @@ export default function OrderDetailPage() {
         description={`세틀먼트 플랫폼 · ${order.orderNumber}`}
       />
       <div className="p-6 space-y-6 animate-fade-in">
-        {/* Back */}
         <Link
           href="/settlement/orders"
           className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 transition-colors"
@@ -115,7 +114,6 @@ export default function OrderDetailPage() {
           주문 목록
         </Link>
 
-        {/* Order Header */}
         <div className="card p-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
@@ -199,7 +197,6 @@ export default function OrderDetailPage() {
           </div>
         </div>
 
-        {/* Progress Stepper (for normal flow) */}
         {!isCancelledOrRefunded && (
           <div className="card p-6">
             <h3 className="text-sm font-semibold text-gray-900 mb-4">
@@ -252,7 +249,6 @@ export default function OrderDetailPage() {
           </div>
         )}
 
-        {/* Order Items */}
         <div className="card p-6">
           <h3 className="text-sm font-semibold text-gray-900 mb-4 flex items-center gap-2">
             <Package className="h-4 w-4 text-gray-400" />
@@ -302,9 +298,7 @@ export default function OrderDetailPage() {
           </div>
         </div>
 
-        {/* Payment & Delivery Info */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Payment Summary */}
           <div className="card p-5">
             <h3 className="text-sm font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <CreditCard className="h-4 w-4 text-gray-400" />
@@ -356,7 +350,6 @@ export default function OrderDetailPage() {
             </div>
           </div>
 
-          {/* Shipping Info */}
           <div className="card p-5">
             <h3 className="text-sm font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <MapPin className="h-4 w-4 text-gray-400" />
@@ -392,7 +385,6 @@ export default function OrderDetailPage() {
           </div>
         </div>
 
-        {/* Timestamps */}
         <div className="card p-5">
           <h3 className="text-sm font-semibold text-gray-900 mb-4 flex items-center gap-2">
             <Clock className="h-4 w-4 text-gray-400" />

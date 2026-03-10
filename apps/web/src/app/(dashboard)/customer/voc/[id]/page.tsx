@@ -113,7 +113,6 @@ export default function VocDetailPage() {
     <>
       <Header title="VOC 상세" description="커스터머 플랫폼" />
       <div className="p-6 space-y-6 animate-fade-in">
-        {/* Back */}
         <Link
           href="/customer/voc"
           className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 transition-colors"
@@ -122,7 +121,6 @@ export default function VocDetailPage() {
           VOC 목록
         </Link>
 
-        {/* Title Card */}
         <div className="card p-6">
           <div className="flex items-start gap-4">
             <div className={cn("rounded-xl p-3", type.bgColor)}>
@@ -156,9 +154,7 @@ export default function VocDetailPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Main Content - left 2/3 */}
           <div className="lg:col-span-2 space-y-6">
-            {/* 고객 문의 내용 */}
             <div className="card p-6">
               <h3 className="text-sm font-semibold text-gray-900 mb-4 flex items-center gap-2">
                 <MessageCircle className="h-4 w-4 text-gray-400" />
@@ -171,7 +167,6 @@ export default function VocDetailPage() {
               </div>
             </div>
 
-            {/* 답변 */}
             {voc.response ? (
               <div className="card p-6 border-l-4 border-green-400">
                 <h3 className="text-sm font-semibold text-green-800 mb-4 flex items-center gap-2">
@@ -202,9 +197,7 @@ export default function VocDetailPage() {
             )}
           </div>
 
-          {/* Sidebar - right 1/3 */}
           <div className="space-y-6">
-            {/* 고객 정보 */}
             <div className="card p-5 space-y-4">
               <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
                 <User className="h-4 w-4 text-gray-400" />
@@ -229,7 +222,6 @@ export default function VocDetailPage() {
               </div>
             </div>
 
-            {/* 처리 정보 */}
             <div className="card p-5 space-y-4">
               <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
                 <Tag className="h-4 w-4 text-gray-400" />
@@ -265,7 +257,6 @@ export default function VocDetailPage() {
               </div>
             </div>
 
-            {/* 처리 타임라인 */}
             <div className="card p-5">
               <h3 className="text-sm font-semibold text-gray-900 mb-4">
                 처리 타임라인

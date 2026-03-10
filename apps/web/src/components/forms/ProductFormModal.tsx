@@ -72,7 +72,6 @@ export function ProductFormModal({
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // 수정 모드일 때 기존 데이터로 폼 초기화
   useEffect(() => {
     if (isOpen && product) {
       setForm({
@@ -134,7 +133,6 @@ export function ProductFormModal({
       reader.readAsDataURL(file);
     });
 
-    // input 초기화
     e.target.value = "";
   }
 
@@ -252,7 +250,6 @@ export function ProductFormModal({
         onSubmit={handleSubmit}
         className="space-y-4 max-h-[65vh] overflow-y-auto pr-1"
       >
-        {/* 상품 이미지 */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             상품 이미지{" "}
@@ -295,7 +292,6 @@ export function ProductFormModal({
           </div>
         </div>
 
-        {/* 상품명 */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             상품명 <span className="text-red-500">*</span>
@@ -312,7 +308,6 @@ export function ProductFormModal({
           )}
         </div>
 
-        {/* 브랜드 / 카테고리 */}
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -358,7 +353,6 @@ export function ProductFormModal({
           </div>
         </div>
 
-        {/* 가격 */}
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -396,7 +390,6 @@ export function ProductFormModal({
           </div>
         </div>
 
-        {/* 설명 */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             상품 설명 <span className="text-red-500">*</span>
@@ -426,7 +419,6 @@ export function ProductFormModal({
           />
         </div>
 
-        {/* 상태 */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             상태
@@ -445,7 +437,6 @@ export function ProductFormModal({
           </select>
         </div>
 
-        {/* 태그 */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             태그
@@ -468,7 +459,6 @@ export function ProductFormModal({
           </div>
         </div>
 
-        {/* 판매 채널 */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             판매 채널 <span className="text-red-500">*</span>
@@ -494,7 +484,6 @@ export function ProductFormModal({
           )}
         </div>
 
-        {/* 액션 */}
         <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
           <button type="button" onClick={onClose} className="btn-secondary">
             취소

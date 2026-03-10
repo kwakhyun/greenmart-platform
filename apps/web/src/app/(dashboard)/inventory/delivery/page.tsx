@@ -51,7 +51,6 @@ export default function DeliveryPage() {
         description="인벤토리 플랫폼 · Last-mile 최적 배송 서비스"
       />
       <div className="p-6 space-y-6 animate-fade-in">
-        {/* Filters */}
         <div className="card p-4 flex flex-wrap items-center gap-3">
           <Filter className="h-4 w-4 text-gray-400" />
           <select
@@ -88,7 +87,6 @@ export default function DeliveryPage() {
           </span>
         </div>
 
-        {/* Loading */}
         {isLoading && (
           <div className="card p-16 text-center">
             <Loader2 className="h-8 w-8 text-brand-primary animate-spin mx-auto mb-4" />
@@ -98,7 +96,6 @@ export default function DeliveryPage() {
           </div>
         )}
 
-        {/* Error */}
         {isError && (
           <div className="card p-16 text-center">
             <h3 className="text-sm font-semibold text-gray-900 mb-1">
@@ -112,7 +109,6 @@ export default function DeliveryPage() {
           </div>
         )}
 
-        {/* Empty */}
         {!isLoading && !isError && items.length === 0 && (
           <div className="card p-16 text-center">
             <Package className="h-12 w-12 text-gray-300 mx-auto mb-4" />
@@ -123,7 +119,6 @@ export default function DeliveryPage() {
           </div>
         )}
 
-        {/* Delivery List */}
         {!isLoading && !isError && items.length > 0 && (
           <div className="space-y-4">
             {items.map((delivery) => {

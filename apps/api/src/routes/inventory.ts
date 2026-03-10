@@ -10,16 +10,10 @@ import { validate } from "../middleware/validate";
 
 const router = Router();
 
-// ============================================================
-// GET /api/inventory/warehouses — 창고 목록
-// ============================================================
 router.get("/warehouses", (_req: Request, res: Response) => {
   res.json(warehouses);
 });
 
-// ============================================================
-// GET /api/inventory/stock — 재고 목록 조회
-// ============================================================
 const StockQuerySchema = z.object({
   warehouseId: z.string().optional(),
   status: z
@@ -60,9 +54,6 @@ router.get(
   },
 );
 
-// ============================================================
-// GET /api/inventory/deliveries — 배송 목록
-// ============================================================
 const DeliveryQuerySchema = z.object({
   status: z
     .enum([
@@ -98,9 +89,6 @@ router.get(
   },
 );
 
-// ============================================================
-// GET /api/inventory/deliveries/:id — 배송 상세
-// ============================================================
 router.get("/deliveries/:id", (req: Request, res: Response) => {
   const delivery = deliveries.find((d) => d.id === req.params.id);
   if (!delivery) {
@@ -114,9 +102,6 @@ router.get("/deliveries/:id", (req: Request, res: Response) => {
   res.json(delivery);
 });
 
-// ============================================================
-// GET /api/inventory/movements — 재고 이동 내역
-// ============================================================
 router.get("/movements", (_req: Request, res: Response) => {
   res.json(stockMovements);
 });

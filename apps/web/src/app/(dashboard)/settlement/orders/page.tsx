@@ -50,7 +50,6 @@ export default function OrdersPage() {
         description="세틀먼트 플랫폼 · 주문 처리 및 결제 관리"
       />
       <div className="p-6 space-y-6 animate-fade-in">
-        {/* Status Tabs */}
         <div className="flex gap-2 flex-wrap" role="tablist">
           {[
             { key: "", label: "전체", count: statusCounts.total },
@@ -93,7 +92,6 @@ export default function OrdersPage() {
           ))}
         </div>
 
-        {/* Filters */}
         <div className="card p-4 flex items-center gap-3">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
@@ -143,7 +141,6 @@ export default function OrdersPage() {
           </button>
         </div>
 
-        {/* Loading */}
         {isLoading && (
           <div className="card p-16 text-center">
             <Loader2 className="h-8 w-8 text-brand-primary animate-spin mx-auto mb-4" />
@@ -153,7 +150,6 @@ export default function OrdersPage() {
           </div>
         )}
 
-        {/* Error */}
         {isError && (
           <div className="card p-16 text-center">
             <h3 className="text-sm font-semibold text-gray-900 mb-1">
@@ -167,7 +163,6 @@ export default function OrdersPage() {
           </div>
         )}
 
-        {/* Orders Table */}
         {!isLoading && !isError && (
           <div className="card overflow-hidden">
             <div className="overflow-x-auto">
@@ -265,7 +260,6 @@ export default function OrdersPage() {
           </div>
         )}
 
-        {/* Order Detail Preview */}
         {!isLoading && !isError && filtered.length > 0 && (
           <div className="card p-5">
             <h3 className="text-sm font-semibold text-gray-900 mb-4">
@@ -344,7 +338,6 @@ export default function OrdersPage() {
         )}
       </div>
 
-      {/* Order Status Modal */}
       <OrderStatusModal
         isOpen={!!selectedOrder}
         onClose={() => setSelectedOrder(null)}

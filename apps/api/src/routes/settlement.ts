@@ -6,9 +6,6 @@ import { validate } from "../middleware/validate";
 
 const router = Router();
 
-// ============================================================
-// GET /api/settlement/orders — 주문 목록 조회
-// ============================================================
 const OrderQuerySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
   size: z.coerce.number().int().min(1).max(100).default(20),
@@ -81,9 +78,6 @@ router.get(
   },
 );
 
-// ============================================================
-// GET /api/settlement/orders/:id — 주문 상세
-// ============================================================
 router.get("/orders/:id", (req: Request, res: Response) => {
   const order = orders.find((o) => o.id === req.params.id);
   if (!order) {
@@ -97,9 +91,6 @@ router.get("/orders/:id", (req: Request, res: Response) => {
   res.json(order);
 });
 
-// ============================================================
-// PATCH /api/settlement/orders/:id/status — 주문 상태 변경
-// ============================================================
 router.patch(
   "/orders/:id/status",
   validate({ body: OrderStatusUpdateSchema }),
@@ -119,9 +110,6 @@ router.patch(
   },
 );
 
-// ============================================================
-// GET /api/settlement/settlements — 정산 내역 조회
-// ============================================================
 const SettlementQuerySchema = z.object({
   period: z
     .string()
@@ -157,9 +145,6 @@ router.get(
   },
 );
 
-// ============================================================
-// GET /api/settlement/settlements/:id — 정산 상세
-// ============================================================
 router.get("/settlements/:id", (req: Request, res: Response) => {
   const settlement = settlements.find((s) => s.id === req.params.id);
   if (!settlement) {
@@ -173,9 +158,6 @@ router.get("/settlements/:id", (req: Request, res: Response) => {
   res.json(settlement);
 });
 
-// ============================================================
-// GET /api/settlement/dashboard — 대시보드 요약
-// ============================================================
 router.get("/dashboard", (_req: Request, res: Response) => {
   res.json(dashboardSummary);
 });

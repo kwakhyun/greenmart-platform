@@ -11,9 +11,6 @@ import { validate } from "../middleware/validate";
 
 const router = Router();
 
-// ============================================================
-// GET /api/customer/members — 회원 목록 조회
-// ============================================================
 const MemberListQuerySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
   size: z.coerce.number().int().min(1).max(100).default(20),
@@ -62,9 +59,6 @@ router.get(
   },
 );
 
-// ============================================================
-// POST /api/customer/members — 회원 등록
-// ============================================================
 router.post(
   "/members",
   validate({ body: CustomerFormSchema }),
@@ -94,9 +88,6 @@ router.post(
   },
 );
 
-// ============================================================
-// DELETE /api/customer/members/:id — 회원 삭제
-// ============================================================
 router.delete("/members/:id", (req: Request, res: Response) => {
   const idx = customers.findIndex((c) => c.id === req.params.id);
   if (idx === -1) {
@@ -111,9 +102,6 @@ router.delete("/members/:id", (req: Request, res: Response) => {
   res.json({ message: "회원이 삭제되었습니다.", id: deleted.id });
 });
 
-// ============================================================
-// GET /api/customer/members/:id — 회원 상세
-// ============================================================
 router.get("/members/:id", (req: Request, res: Response) => {
   const customer = customers.find((c) => c.id === req.params.id);
   if (!customer) {
@@ -127,18 +115,12 @@ router.get("/members/:id", (req: Request, res: Response) => {
   res.json(customer);
 });
 
-// ============================================================
-// GET /api/customer/promotions — 프로모션 목록
-// ============================================================
 router.get("/promotions", (req: Request, res: Response) => {
   const activeOnly = req.query.active === "true";
   const result = activeOnly ? promotions.filter((p) => p.isActive) : promotions;
   res.json(result);
 });
 
-// ============================================================
-// GET /api/customer/promotions/:id — 프로모션 상세
-// ============================================================
 router.get("/promotions/:id", (req: Request, res: Response) => {
   const promo = promotions.find((p) => p.id === req.params.id);
   if (!promo) {
@@ -152,16 +134,10 @@ router.get("/promotions/:id", (req: Request, res: Response) => {
   res.json(promo);
 });
 
-// ============================================================
-// GET /api/customer/coupons — 쿠폰 목록
-// ============================================================
 router.get("/coupons", (_req: Request, res: Response) => {
   res.json(coupons);
 });
 
-// ============================================================
-// GET /api/customer/voc — 고객의 소리 목록
-// ============================================================
 const VocQuerySchema = z.object({
   type: z.enum(["INQUIRY", "COMPLAINT", "SUGGESTION", "COMPLIMENT"]).optional(),
   status: z.enum(["PENDING", "IN_PROGRESS", "RESOLVED", "CLOSED"]).optional(),
@@ -195,9 +171,6 @@ router.get(
   },
 );
 
-// ============================================================
-// GET /api/customer/voc/:id — VOC 상세
-// ============================================================
 router.get("/voc/:id", (req: Request, res: Response) => {
   const voc = customerVoices.find((v) => v.id === req.params.id);
   if (!voc) {
