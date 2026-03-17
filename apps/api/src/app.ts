@@ -9,6 +9,8 @@ import customerRouter from "./routes/customer";
 import inventoryRouter from "./routes/inventory";
 import settlementRouter from "./routes/settlement";
 import { errorHandler, notFoundHandler } from "./middleware/error-handler";
+import { responseTimeMiddleware } from "./middleware/response-time";
+import { rateLimiter } from "./middleware/rate-limiter";
 import { swaggerSpec } from "./swagger";
 import { logger } from "./lib/logger";
 
@@ -34,12 +36,18 @@ export function createApp() {
     }),
   );
 
-  app.options("*", cors({
-    origin: allowedOrigins,
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  }));
+  app.options(
+    "*",
+    cors({
+      origin: allowedOrigins,
+      credentials: true,
+      methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+    }),
+  );
+  app.use(responseTimeMiddleware);
+  app.use(rateLimiter({ windowMs: 60_000, maxRequests: 100 }));
+
   app.use(
     morgan(process.env.NODE_ENV === "production" ? "combined" : "dev", {
       stream: { write: (message: string) => logger.http(message.trim()) },

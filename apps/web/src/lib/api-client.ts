@@ -21,6 +21,11 @@ import type { CustomerFormData, ProductFormData } from "@greenmart/shared";
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api";
 
+const DEFAULT_TIMEOUT = 10_000;
+const MAX_RETRIES = 2;
+const RETRY_BASE_DELAY = 500;
+const RETRYABLE_STATUS_CODES = new Set([408, 429, 500, 502, 503, 504]);
+
 class ApiClientError extends Error {
   constructor(
     public readonly status: number,
@@ -33,35 +38,140 @@ class ApiClientError extends Error {
   }
 }
 
+type RequestInterceptor = (config: RequestInit) => RequestInit;
+type ResponseInterceptor = (response: Response) => Response;
+
+const requestInterceptors: RequestInterceptor[] = [];
+const responseInterceptors: ResponseInterceptor[] = [];
+
+export function addRequestInterceptor(fn: RequestInterceptor) {
+  requestInterceptors.push(fn);
+  return () => {
+    const idx = requestInterceptors.indexOf(fn);
+    if (idx !== -1) requestInterceptors.splice(idx, 1);
+  };
+}
+
+export function addResponseInterceptor(fn: ResponseInterceptor) {
+  responseInterceptors.push(fn);
+  return () => {
+    const idx = responseInterceptors.indexOf(fn);
+    if (idx !== -1) responseInterceptors.splice(idx, 1);
+  };
+}
+
+function applyRequestInterceptors(config: RequestInit): RequestInit {
+  return requestInterceptors.reduce((cfg, fn) => fn(cfg), config);
+}
+
+function applyResponseInterceptors(response: Response): Response {
+  return responseInterceptors.reduce((res, fn) => fn(res), response);
+}
+
+function wait(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function fetchWithTimeout(
+  url: string,
+  options: RequestInit,
+  timeout: number,
+): Promise<Response> {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } finally {
+    clearTimeout(id);
+  }
+}
+
 async function fetchApi<T>(
   endpoint: string,
-  options?: RequestInit,
+  options?: RequestInit & { skipRetry?: boolean },
 ): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
+  const method = options?.method ?? "GET";
+  const isIdempotent =
+    method === "GET" || method === "PUT" || method === "DELETE";
+  const shouldRetry = !options?.skipRetry && isIdempotent;
 
-  const res = await fetch(url, {
+  let config: RequestInit = {
     headers: {
       "Content-Type": "application/json",
       ...options?.headers,
     },
     ...options,
-  });
+  };
 
-  if (!res.ok) {
-    const error: ApiErrorResponse = await res.json().catch(() => ({
-      status: res.status,
-      message: res.statusText,
-      code: "UNKNOWN_ERROR",
-    }));
-    throw new ApiClientError(
-      error.status,
-      error.code,
-      error.message,
-      error.details,
-    );
+  config = applyRequestInterceptors(config);
+
+  let lastError: Error | null = null;
+  const attempts = shouldRetry ? MAX_RETRIES + 1 : 1;
+
+  for (let attempt = 0; attempt < attempts; attempt++) {
+    try {
+      if (attempt > 0) {
+        const delay = RETRY_BASE_DELAY * Math.pow(2, attempt - 1);
+        await wait(delay);
+      }
+
+      let res = await fetchWithTimeout(url, config, DEFAULT_TIMEOUT);
+      res = applyResponseInterceptors(res);
+
+      if (!res.ok) {
+        if (
+          shouldRetry &&
+          attempt < MAX_RETRIES &&
+          RETRYABLE_STATUS_CODES.has(res.status)
+        ) {
+          lastError = new ApiClientError(
+            res.status,
+            "RETRYABLE",
+            `Attempt ${attempt + 1} failed`,
+          );
+          continue;
+        }
+
+        const error: ApiErrorResponse = await res.json().catch(() => ({
+          status: res.status,
+          message: res.statusText,
+          code: "UNKNOWN_ERROR",
+        }));
+        throw new ApiClientError(
+          error.status,
+          error.code,
+          error.message,
+          error.details,
+        );
+      }
+
+      return res.json() as Promise<T>;
+    } catch (err) {
+      if (
+        err instanceof ApiClientError &&
+        !RETRYABLE_STATUS_CODES.has(err.status)
+      ) {
+        throw err;
+      }
+
+      if (err instanceof DOMException && err.name === "AbortError") {
+        lastError = new ApiClientError(
+          408,
+          "TIMEOUT",
+          "요청 시간이 초과되었습니다.",
+        );
+        if (!shouldRetry || attempt >= MAX_RETRIES) throw lastError;
+        continue;
+      }
+
+      lastError = err instanceof Error ? err : new Error(String(err));
+      if (!shouldRetry || attempt >= MAX_RETRIES) throw lastError;
+    }
   }
 
-  return res.json() as Promise<T>;
+  throw lastError ?? new Error("Unexpected error in fetchApi");
 }
 
 export interface ProductListParams {

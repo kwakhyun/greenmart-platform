@@ -42,6 +42,20 @@ describe("Health Check", () => {
   });
 });
 
+describe("Middleware", () => {
+  it("should include X-RateLimit headers", async () => {
+    const res = await request(app).get("/api/health");
+    expect(res.headers).toHaveProperty("x-ratelimit-limit");
+    expect(res.headers).toHaveProperty("x-ratelimit-remaining");
+    expect(res.headers).toHaveProperty("x-ratelimit-reset");
+  });
+
+  it("should include X-Response-Time header", async () => {
+    const res = await request(app).get("/api/health");
+    expect(res.headers).toHaveProperty("x-response-time");
+  });
+});
+
 describe("Catalog API", () => {
   describe("GET /api/catalog/products", () => {
     it("should return paginated products", async () => {

@@ -1,5 +1,6 @@
 export { useDebounce } from "./useDebounce";
 export { usePagination } from "./usePagination";
+export { useMutationWithToast } from "./useMutationWithToast";
 export {
   useProducts,
   useProduct,
