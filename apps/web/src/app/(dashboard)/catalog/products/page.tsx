@@ -161,9 +161,25 @@ export default function ProductsPage() {
         </div>
 
         {isLoading && (
-          <div className="card p-16 text-center">
-            <Loader2 className="h-8 w-8 text-brand-primary animate-spin mx-auto mb-4" />
-            <p className="text-sm text-gray-500">상품을 불러오는 중...</p>
+          <div
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+            role="status"
+            aria-label="상품 로딩 중"
+          >
+            <span className="sr-only">상품 데이터를 불러오는 중입니다...</span>
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="card overflow-hidden">
+                <div className="h-40 bg-gray-200 dark:bg-gray-800 relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-shimmer before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent" />
+                <div className="p-4 space-y-2">
+                  <div className="h-4 w-3/4 bg-gray-200 dark:bg-gray-800 rounded" />
+                  <div className="h-3 w-1/2 bg-gray-100 dark:bg-gray-800/60 rounded" />
+                  <div className="flex justify-between pt-2">
+                    <div className="h-4 w-20 bg-gray-200 dark:bg-gray-800 rounded" />
+                    <div className="h-5 w-12 bg-gray-100 dark:bg-gray-800/60 rounded-full" />
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         )}
 

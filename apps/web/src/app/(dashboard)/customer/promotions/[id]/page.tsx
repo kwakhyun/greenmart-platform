@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import Header from "@/components/layout/Header";
 import { usePromotion } from "@/hooks";
+import { DetailPageSkeleton } from "@/components/ui";
 import { cn, formatCurrency, formatDate } from "@/lib/utils";
 import {
   ArrowLeft,
@@ -67,14 +68,7 @@ export default function PromotionDetailPage() {
     return (
       <>
         <Header title="프로모션 관리" description="커스터머 플랫폼" />
-        <div className="p-6">
-          <div className="card p-16 text-center">
-            <Loader2 className="h-8 w-8 text-brand-primary animate-spin mx-auto mb-4" />
-            <p className="text-sm text-gray-500">
-              프로모션 정보를 불러오는 중...
-            </p>
-          </div>
-        </div>
+        <DetailPageSkeleton />
       </>
     );
   }

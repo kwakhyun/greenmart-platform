@@ -147,11 +147,47 @@ export default function StockPage() {
         </div>
 
         {isLoading && (
-          <div className="card p-16 text-center">
-            <Loader2 className="h-8 w-8 text-brand-primary animate-spin mx-auto mb-4" />
-            <p className="text-sm text-gray-500">
-              재고 데이터를 불러오는 중...
-            </p>
+          <div
+            className="card overflow-hidden"
+            role="status"
+            aria-label="재고 목록 로딩 중"
+          >
+            <span className="sr-only">재고 데이터를 불러오는 중입니다...</span>
+            <table className="w-full">
+              <thead className="bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-800">
+                <tr>
+                  {[
+                    "상품",
+                    "SKU",
+                    "현재고",
+                    "안전재고",
+                    "상태",
+                    "최종 입고",
+                  ].map((h) => (
+                    <th key={h} className="table-header">
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <tr
+                    key={i}
+                    className="border-b border-gray-50 dark:border-gray-800/50"
+                  >
+                    {Array.from({ length: 6 }).map((_, j) => (
+                      <td key={j} className="table-cell">
+                        <div
+                          className={`h-3 bg-gray-200 dark:bg-gray-800 rounded relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-shimmer before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent`}
+                          style={{ width: `${40 + Math.random() * 40}%` }}
+                        />
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
 

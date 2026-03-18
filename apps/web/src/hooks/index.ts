@@ -1,6 +1,11 @@
 export { useDebounce } from "./useDebounce";
 export { usePagination } from "./usePagination";
 export { useMutationWithToast } from "./useMutationWithToast";
+export { useTheme } from "./useTheme";
+export { useKeyboardShortcut } from "./useKeyboardShortcut";
+export { useFocusTrap } from "./useFocusTrap";
+export { useIntersectionObserver } from "./useIntersectionObserver";
+export { useReducedMotion } from "./useReducedMotion";
 export {
   useProducts,
   useProduct,

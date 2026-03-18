@@ -130,5 +130,12 @@ describe("utils", () => {
     it("should return default for unknown status", () => {
       expect(getStatusColor("SOMETHING_UNKNOWN")).toContain("bg-gray");
     });
+
+    it("should include dark mode classes", () => {
+      expect(getStatusColor("DELIVERED")).toContain("dark:");
+      expect(getStatusColor("PENDING")).toContain("dark:");
+      expect(getStatusColor("CANCELLED")).toContain("dark:");
+      expect(getStatusColor("SOMETHING_UNKNOWN")).toContain("dark:");
+    });
   });
 });

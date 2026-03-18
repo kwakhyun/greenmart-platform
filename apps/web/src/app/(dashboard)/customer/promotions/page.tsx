@@ -36,9 +36,30 @@ export default function PromotionsPage() {
       />
       <div className="p-6 space-y-6 animate-fade-in">
         {isLoading && (
-          <div className="card p-16 text-center">
-            <Loader2 className="h-8 w-8 text-brand-primary animate-spin mx-auto mb-4" />
-            <p className="text-sm text-gray-500">데이터를 불러오는 중...</p>
+          <div
+            className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"
+            role="status"
+            aria-label="프로모션 로딩 중"
+          >
+            <span className="sr-only">
+              프로모션 데이터를 불러오는 중입니다...
+            </span>
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="card p-5 space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-lg bg-gray-200 dark:bg-gray-800 relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-shimmer before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent" />
+                  <div className="flex-1 space-y-1.5">
+                    <div className="h-4 w-3/4 bg-gray-200 dark:bg-gray-800 rounded" />
+                    <div className="h-3 w-1/2 bg-gray-100 dark:bg-gray-800/60 rounded" />
+                  </div>
+                </div>
+                <div className="h-2 w-full bg-gray-100 dark:bg-gray-800/60 rounded-full" />
+                <div className="flex justify-between">
+                  <div className="h-3 w-20 bg-gray-200 dark:bg-gray-800 rounded" />
+                  <div className="h-5 w-14 bg-gray-200 dark:bg-gray-800 rounded-full" />
+                </div>
+              </div>
+            ))}
           </div>
         )}
 

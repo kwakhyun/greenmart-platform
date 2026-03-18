@@ -128,9 +128,22 @@ export default function VocPage() {
         </div>
 
         {isLoading && (
-          <div className="card p-16 text-center">
-            <Loader2 className="h-8 w-8 text-brand-primary animate-spin mx-auto mb-4" />
-            <p className="text-sm text-gray-500">데이터를 불러오는 중...</p>
+          <div
+            className="space-y-3"
+            role="status"
+            aria-label="VOC 목록 로딩 중"
+          >
+            <span className="sr-only">데이터를 불러오는 중입니다...</span>
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="card p-4 flex items-center gap-4">
+                <div className="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-800 relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-shimmer before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent" />
+                <div className="flex-1 space-y-1.5">
+                  <div className="h-4 w-3/5 bg-gray-200 dark:bg-gray-800 rounded relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-shimmer before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent" />
+                  <div className="h-3 w-2/5 bg-gray-100 dark:bg-gray-800/60 rounded" />
+                </div>
+                <div className="h-6 w-16 bg-gray-200 dark:bg-gray-800 rounded-full" />
+              </div>
+            ))}
           </div>
         )}
 

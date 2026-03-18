@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import {
   BarChart,
   Bar,
@@ -29,7 +30,9 @@ interface SalesChartProps {
   monthlySales: DashboardSummary["monthlySales"];
 }
 
-export function SalesChart({ monthlySales }: SalesChartProps) {
+export const SalesChart = memo(function SalesChart({
+  monthlySales,
+}: SalesChartProps) {
   const data = monthlySales.map((m) => ({
     name: m.date.slice(5),
     매출: m.totalSales / 100000000,
@@ -38,14 +41,24 @@ export function SalesChart({ monthlySales }: SalesChartProps) {
 
   return (
     <div className="card p-5">
-      <h3 className="text-sm font-semibold text-gray-900 mb-4">
+      <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4">
         월별 매출 추이
       </h3>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-          <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-          <YAxis tick={{ fontSize: 12 }} />
+          <CartesianGrid
+            strokeDasharray="3 3"
+            className="stroke-gray-100 dark:stroke-gray-800"
+          />
+          <XAxis
+            dataKey="name"
+            tick={{ fontSize: 12 }}
+            className="text-gray-600 dark:text-gray-400"
+          />
+          <YAxis
+            tick={{ fontSize: 12 }}
+            className="text-gray-600 dark:text-gray-400"
+          />
           <Tooltip
             formatter={(value: number, name: string) =>
               name === "매출"
@@ -58,13 +71,15 @@ export function SalesChart({ monthlySales }: SalesChartProps) {
       </ResponsiveContainer>
     </div>
   );
-}
+});
 
 interface CategoryPieChartProps {
   categoryBreakdown: DashboardSummary["categoryBreakdown"];
 }
 
-export function CategoryPieChart({ categoryBreakdown }: CategoryPieChartProps) {
+export const CategoryPieChart = memo(function CategoryPieChart({
+  categoryBreakdown,
+}: CategoryPieChartProps) {
   const data = categoryBreakdown.map((c) => ({
     name: c.categoryName,
     value: c.percentage,
@@ -73,7 +88,7 @@ export function CategoryPieChart({ categoryBreakdown }: CategoryPieChartProps) {
 
   return (
     <div className="card p-5">
-      <h3 className="text-sm font-semibold text-gray-900 mb-4">
+      <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4">
         카테고리별 매출 비중
       </h3>
       <ResponsiveContainer width="100%" height={300}>
@@ -113,16 +128,18 @@ export function CategoryPieChart({ categoryBreakdown }: CategoryPieChartProps) {
       </ResponsiveContainer>
     </div>
   );
-}
+});
 
 interface TopProductsTableProps {
   topProducts: DashboardSummary["topProducts"];
 }
 
-export function TopProductsTable({ topProducts }: TopProductsTableProps) {
+export const TopProductsTable = memo(function TopProductsTable({
+  topProducts,
+}: TopProductsTableProps) {
   return (
     <div className="card p-5">
-      <h3 className="text-sm font-semibold text-gray-900 mb-4">
+      <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4">
         인기 상품 TOP 5
       </h3>
       <div className="space-y-3">
@@ -132,14 +149,14 @@ export function TopProductsTable({ topProducts }: TopProductsTableProps) {
               {index + 1}
             </span>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-900 truncate">
+              <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
                 {product.productName}
               </p>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-gray-500 dark:text-gray-400">
                 {product.orders.toLocaleString()}건
               </p>
             </div>
-            <span className="text-sm font-semibold text-gray-900">
+            <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
               {formatCompactNumber(product.sales)}
             </span>
           </div>
@@ -147,17 +164,21 @@ export function TopProductsTable({ topProducts }: TopProductsTableProps) {
       </div>
     </div>
   );
-}
+});
 
 interface RecentOrdersTableProps {
   recentOrders: DashboardSummary["recentOrders"];
 }
 
-export function RecentOrdersTable({ recentOrders }: RecentOrdersTableProps) {
+export const RecentOrdersTable = memo(function RecentOrdersTable({
+  recentOrders,
+}: RecentOrdersTableProps) {
   return (
     <div className="card p-5">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-semibold text-gray-900">최근 주문</h3>
+        <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+          최근 주문
+        </h3>
         <a
           href="/settlement/orders"
           className="text-xs text-brand-primary font-medium hover:underline"
@@ -168,7 +189,7 @@ export function RecentOrdersTable({ recentOrders }: RecentOrdersTableProps) {
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-gray-100">
+            <tr className="border-b border-gray-100 dark:border-gray-800">
               <th className="table-header">주문번호</th>
               <th className="table-header">고객</th>
               <th className="table-header">금액</th>
@@ -179,7 +200,7 @@ export function RecentOrdersTable({ recentOrders }: RecentOrdersTableProps) {
             {recentOrders.map((order) => (
               <tr
                 key={order.id}
-                className="border-b border-gray-50 hover:bg-gray-50/50"
+                className="border-b border-gray-50 dark:border-gray-800/50 hover:bg-gray-50/50 dark:hover:bg-gray-800/30"
               >
                 <td className="table-cell font-mono text-xs">
                   {order.orderNumber}
@@ -200,7 +221,7 @@ export function RecentOrdersTable({ recentOrders }: RecentOrdersTableProps) {
       </div>
     </div>
   );
-}
+});
 
 function getOrderBadgeColor(status: string): string {
   const map: Record<string, string> = {

@@ -142,11 +142,48 @@ export default function OrdersPage() {
         </div>
 
         {isLoading && (
-          <div className="card p-16 text-center">
-            <Loader2 className="h-8 w-8 text-brand-primary animate-spin mx-auto mb-4" />
-            <p className="text-sm text-gray-500">
-              주문 데이터를 불러오는 중...
-            </p>
+          <div
+            className="card overflow-hidden"
+            role="status"
+            aria-label="주문 목록 로딩 중"
+          >
+            <span className="sr-only">주문 데이터를 불러오는 중입니다...</span>
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
+                  {[
+                    "주문번호",
+                    "고객명",
+                    "상품",
+                    "금액",
+                    "결제",
+                    "상태",
+                    "일시",
+                  ].map((h) => (
+                    <th key={h} className="table-header">
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {Array.from({ length: 10 }).map((_, i) => (
+                  <tr
+                    key={i}
+                    className="border-b border-gray-50 dark:border-gray-800/50"
+                  >
+                    {Array.from({ length: 7 }).map((_, j) => (
+                      <td key={j} className="table-cell">
+                        <div
+                          className={`h-3 bg-gray-200 dark:bg-gray-800 rounded relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-shimmer before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent`}
+                          style={{ width: `${40 + Math.random() * 40}%` }}
+                        />
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
 

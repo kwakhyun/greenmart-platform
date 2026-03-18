@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 interface ModalProps {
   isOpen: boolean;
@@ -23,8 +24,9 @@ const sizeMap = {
 /**
  * 접근성(a11y) 준수한 Modal 컴포넌트
  * - ESC 키로 닫기
- * - 포커스 트랩
+ * - 포커스 트랩 (useFocusTrap 훅 활용)
  * - 배경 클릭으로 닫기
+ * - ARIA 역할 및 라벨
  */
 export function Modal({
   isOpen,
@@ -35,6 +37,7 @@ export function Modal({
   size = "md",
 }: ModalProps) {
   const overlayRef = useRef<HTMLDivElement>(null);
+  const contentRef = useFocusTrap<HTMLDivElement>(isOpen);
 
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
@@ -68,23 +71,29 @@ export function Modal({
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm animate-fade-in" />
 
       <div
+        ref={contentRef}
         className={cn(
-          "relative w-full bg-white rounded-xl shadow-2xl animate-slide-up",
+          "relative w-full bg-white dark:bg-gray-900 rounded-xl shadow-2xl animate-slide-up",
           sizeMap[size],
         )}
       >
-        <div className="flex items-center justify-between p-5 border-b border-gray-200">
+        <div className="flex items-center justify-between p-5 border-b border-gray-200 dark:border-gray-700">
           <div>
-            <h2 id="modal-title" className="text-base font-bold text-gray-900">
+            <h2
+              id="modal-title"
+              className="text-base font-bold text-gray-900 dark:text-gray-100"
+            >
               {title}
             </h2>
             {description && (
-              <p className="text-xs text-gray-500 mt-0.5">{description}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                {description}
+              </p>
             )}
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+            className="rounded-lg p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             aria-label="닫기"
           >
             <X className="h-5 w-5" />

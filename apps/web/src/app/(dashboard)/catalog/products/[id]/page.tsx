@@ -6,6 +6,7 @@ import Header from "@/components/layout/Header";
 import { useProduct, useDeleteProduct, useUpdateProduct } from "@/hooks";
 import { formatCurrency, cn } from "@/lib/utils";
 import { Modal } from "@/components/ui/Modal";
+import { DetailPageSkeleton } from "@/components/ui";
 import {
   ArrowLeft,
   Star,
@@ -40,12 +41,7 @@ export default function ProductDetailPage() {
     return (
       <>
         <Header title="상품 관리" description="카탈로그 플랫폼" />
-        <div className="p-6">
-          <div className="card p-16 text-center">
-            <Loader2 className="h-8 w-8 text-brand-primary animate-spin mx-auto mb-4" />
-            <p className="text-sm text-gray-500">상품 정보를 불러오는 중...</p>
-          </div>
-        </div>
+        <DetailPageSkeleton />
       </>
     );
   }

@@ -56,7 +56,7 @@ export function Pagination({
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage <= 1}
-        className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+        className="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
         aria-label="이전 페이지"
       >
         <ChevronLeft className="h-4 w-4" />
@@ -64,7 +64,10 @@ export function Pagination({
 
       {getVisiblePages().map((page, idx) =>
         page === "..." ? (
-          <span key={`ellipsis-${idx}`} className="px-2 text-gray-400 text-sm">
+          <span
+            key={`ellipsis-${idx}`}
+            className="px-2 text-gray-400 dark:text-gray-500 text-sm"
+          >
             …
           </span>
         ) : (
@@ -75,7 +78,7 @@ export function Pagination({
               "h-8 w-8 rounded-lg text-sm font-medium transition-colors",
               currentPage === page
                 ? "bg-brand-primary text-white"
-                : "text-gray-600 hover:bg-gray-100",
+                : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800",
             )}
             aria-current={currentPage === page ? "page" : undefined}
           >

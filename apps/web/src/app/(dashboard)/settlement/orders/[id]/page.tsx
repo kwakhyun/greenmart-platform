@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import Header from "@/components/layout/Header";
 import { useOrder, useUpdateOrderStatus } from "@/hooks";
+import { DetailPageSkeleton } from "@/components/ui";
 import type { OrderStatus } from "@/types";
 import {
   cn,
@@ -60,12 +61,7 @@ export default function OrderDetailPage() {
     return (
       <>
         <Header title="주문 관리" description="세틀먼트 플랫폼" />
-        <div className="p-6">
-          <div className="card p-16 text-center">
-            <Loader2 className="h-8 w-8 text-brand-primary animate-spin mx-auto mb-4" />
-            <p className="text-sm text-gray-500">주문 정보를 불러오는 중...</p>
-          </div>
-        </div>
+        <DetailPageSkeleton />
       </>
     );
   }

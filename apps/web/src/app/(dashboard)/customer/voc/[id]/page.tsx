@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import Header from "@/components/layout/Header";
 import { useVocItem } from "@/hooks";
+import { DetailPageSkeleton } from "@/components/ui";
 import { cn, formatDateTime, getStatusColor } from "@/lib/utils";
 import {
   ArrowLeft,
@@ -72,12 +73,7 @@ export default function VocDetailPage() {
     return (
       <>
         <Header title="고객의 소리 (VOC)" description="커스터머 플랫폼" />
-        <div className="p-6">
-          <div className="card p-16 text-center">
-            <Loader2 className="h-8 w-8 text-brand-primary animate-spin mx-auto mb-4" />
-            <p className="text-sm text-gray-500">VOC 정보를 불러오는 중...</p>
-          </div>
-        </div>
+        <DetailPageSkeleton />
       </>
     );
   }

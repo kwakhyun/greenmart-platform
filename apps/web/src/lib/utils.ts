@@ -151,28 +151,43 @@ export function getSettlementStatusLabel(status: string): string {
   return map[status] ?? status;
 }
 
-/** 상태별 색상 클래스 */
+/** 상태별 색상 클래스 (다크 모드 대응) */
 export function getStatusColor(status: string): string {
   const colorMap: Record<string, string> = {
-    PENDING: "bg-yellow-100 text-yellow-800",
-    CONFIRMED: "bg-blue-100 text-blue-800",
-    PROCESSING: "bg-indigo-100 text-indigo-800",
-    SHIPPED: "bg-purple-100 text-purple-800",
-    DELIVERED: "bg-green-100 text-green-800",
-    CANCELLED: "bg-red-100 text-red-800",
-    REFUNDED: "bg-gray-100 text-gray-800",
-    IN_STOCK: "bg-green-100 text-green-800",
-    LOW_STOCK: "bg-orange-100 text-orange-800",
-    OUT_OF_STOCK: "bg-red-100 text-red-800",
-    CALCULATED: "bg-blue-100 text-blue-800",
-    PAID: "bg-green-100 text-green-800",
-    DISPUTED: "bg-red-100 text-red-800",
-    ACTIVE: "bg-green-100 text-green-800",
-    DORMANT: "bg-gray-100 text-gray-800",
-    WITHDRAWN: "bg-red-100 text-red-800",
-    IN_PROGRESS: "bg-blue-100 text-blue-800",
-    RESOLVED: "bg-green-100 text-green-800",
-    CLOSED: "bg-gray-100 text-gray-800",
+    PENDING:
+      "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400",
+    CONFIRMED:
+      "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
+    PROCESSING:
+      "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400",
+    SHIPPED:
+      "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400",
+    DELIVERED:
+      "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
+    CANCELLED: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400",
+    REFUNDED: "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400",
+    IN_STOCK:
+      "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
+    LOW_STOCK:
+      "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400",
+    OUT_OF_STOCK:
+      "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400",
+    CALCULATED:
+      "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
+    PAID: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
+    DISPUTED: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400",
+    ACTIVE:
+      "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
+    DORMANT: "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400",
+    WITHDRAWN: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400",
+    IN_PROGRESS:
+      "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
+    RESOLVED:
+      "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
+    CLOSED: "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400",
   };
-  return colorMap[status] ?? "bg-gray-100 text-gray-800";
+  return (
+    colorMap[status] ??
+    "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400"
+  );
 }

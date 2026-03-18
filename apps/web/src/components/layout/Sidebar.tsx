@@ -16,8 +16,12 @@ import {
   Leaf,
   Menu,
   X,
+  ChevronsLeft,
+  ChevronsRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useKeyboardShortcut } from "@/hooks/useKeyboardShortcut";
+import { useSidebarStore } from "@/stores/sidebar-store";
 
 const navigation = [
   { name: "대시보드", href: "/", icon: LayoutDashboard },
@@ -38,6 +42,18 @@ const navigation = [
 export default function Sidebar() {
   const pathname = usePathname();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const {
+    isCollapsed,
+    toggle: toggleCollapsed,
+    setCollapsed: setIsCollapsed,
+  } = useSidebarStore();
+
+  useKeyboardShortcut({
+    key: "b",
+    meta: true,
+    handler: toggleCollapsed,
+    description: "사이드바 토글",
+  });
 
   useEffect(() => {
     setIsMobileOpen(false);
@@ -56,33 +72,76 @@ export default function Sidebar() {
 
   const sidebarContent = (
     <>
-      <div className="flex h-16 items-center justify-between border-b border-gray-200 px-5">
+      <div
+        className={cn(
+          "flex h-16 items-center border-b border-gray-200 dark:border-gray-800 transition-all duration-300",
+          isCollapsed ? "justify-center px-2" : "justify-between px-5",
+        )}
+      >
         <div className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-primary">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-primary flex-shrink-0">
             <Leaf className="h-5 w-5 text-white" />
           </div>
-          <div>
-            <h1 className="text-sm font-bold text-gray-900">Core Platform</h1>
-            <p className="text-[10px] text-gray-400">
-              Health & Beauty Commerce
-            </p>
-          </div>
+          {!isCollapsed && (
+            <div>
+              <h1 className="text-sm font-bold text-gray-900 dark:text-gray-100">
+                Core Platform
+              </h1>
+              <p className="text-[10px] text-gray-400 dark:text-gray-500">
+                Health & Beauty Commerce
+              </p>
+            </div>
+          )}
         </div>
         <button
           onClick={() => setIsMobileOpen(false)}
-          className="lg:hidden rounded-lg p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+          className="lg:hidden rounded-lg p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           aria-label="메뉴 닫기"
         >
           <X className="h-5 w-5" />
         </button>
+        {!isCollapsed && (
+          <button
+            onClick={() => setIsCollapsed(true)}
+            className="hidden lg:flex rounded-lg p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            aria-label="사이드바 접기"
+            title="⌘B"
+          >
+            <ChevronsLeft className="h-4 w-4" />
+          </button>
+        )}
       </div>
 
-      <nav className="flex flex-col gap-0.5 p-3 overflow-y-auto h-[calc(100vh-8rem)]">
+      {isCollapsed && (
+        <button
+          onClick={() => setIsCollapsed(false)}
+          className="hidden lg:flex mx-auto mt-2 rounded-lg p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          aria-label="사이드바 펼치기"
+          title="⌘B"
+        >
+          <ChevronsRight className="h-4 w-4" />
+        </button>
+      )}
+
+      <nav
+        className={cn(
+          "flex flex-col gap-0.5 overflow-y-auto h-[calc(100vh-8rem)]",
+          isCollapsed ? "p-2 items-center" : "p-3",
+        )}
+      >
         {navigation.map((item, idx) => {
           if ("divider" in item && item.divider) {
+            if (isCollapsed) {
+              return (
+                <div
+                  key={idx}
+                  className="mt-3 mb-1 w-6 border-t border-gray-200 dark:border-gray-800"
+                />
+              );
+            }
             return (
               <div key={idx} className="mt-4 mb-1 px-3">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500">
                   {item.label}
                 </span>
               </div>
@@ -94,6 +153,25 @@ export default function Sidebar() {
                 ? pathname === "/"
                 : pathname.startsWith(item.href);
             const Icon = item.icon;
+
+            if (isCollapsed) {
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    "flex items-center justify-center w-10 h-10 rounded-lg transition-all duration-200",
+                    isActive
+                      ? "bg-brand-primary/10 text-brand-primary dark:bg-brand-primary/20"
+                      : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100",
+                  )}
+                  title={item.name}
+                >
+                  <Icon className="h-4.5 w-4.5" />
+                </Link>
+              );
+            }
+
             return (
               <Link
                 key={item.href}
@@ -109,16 +187,34 @@ export default function Sidebar() {
         })}
       </nav>
 
-      <div className="absolute bottom-0 left-0 right-0 border-t border-gray-200 p-4">
-        <div className="flex items-center gap-2.5">
-          <div className="h-8 w-8 rounded-full bg-brand-primary/20 flex items-center justify-center">
+      <div
+        className={cn(
+          "absolute bottom-0 left-0 right-0 border-t border-gray-200 dark:border-gray-800",
+          isCollapsed ? "p-2 flex justify-center" : "p-4",
+        )}
+      >
+        {isCollapsed ? (
+          <div
+            className="h-8 w-8 rounded-full bg-brand-primary/20 flex items-center justify-center"
+            title="관리자"
+          >
             <span className="text-xs font-bold text-brand-primary">관</span>
           </div>
-          <div>
-            <p className="text-xs font-semibold text-gray-700">관리자</p>
-            <p className="text-[10px] text-gray-400">admin@greenmart.co.kr</p>
+        ) : (
+          <div className="flex items-center gap-2.5">
+            <div className="h-8 w-8 rounded-full bg-brand-primary/20 flex items-center justify-center">
+              <span className="text-xs font-bold text-brand-primary">관</span>
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                관리자
+              </p>
+              <p className="text-[10px] text-gray-400 dark:text-gray-500">
+                admin@greenmart.co.kr
+              </p>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </>
   );
@@ -127,10 +223,10 @@ export default function Sidebar() {
     <>
       <button
         onClick={() => setIsMobileOpen(true)}
-        className="fixed top-4 left-4 z-50 lg:hidden rounded-lg p-2 bg-white border border-gray-200 shadow-sm hover:bg-gray-50 transition-colors"
+        className="fixed top-4 left-4 z-50 lg:hidden rounded-lg p-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
         aria-label="메뉴 열기"
       >
-        <Menu className="h-5 w-5 text-gray-600" />
+        <Menu className="h-5 w-5 text-gray-600 dark:text-gray-400" />
       </button>
 
       {isMobileOpen && (
@@ -142,9 +238,12 @@ export default function Sidebar() {
 
       <aside
         className={cn(
-          "fixed left-0 top-0 z-40 h-screen w-64 border-r border-gray-200 bg-white transition-transform duration-300 ease-in-out",
+          "fixed left-0 top-0 z-40 h-screen border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 transition-all duration-300 ease-in-out",
+          isCollapsed ? "w-16" : "w-64",
           "lg:translate-x-0",
-          isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
+          isMobileOpen
+            ? "translate-x-0 !w-64"
+            : "-translate-x-full lg:translate-x-0",
         )}
       >
         {sidebarContent}

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import QueryProvider from "@/components/providers/QueryProvider";
-import { ToastProvider } from "@/components/ui";
+import { AriaAnnouncerProvider } from "@/components/providers/AriaAnnouncer";
+import { ToastProvider, SkipLink } from "@/components/ui";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -15,10 +16,28 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ko">
+    <html lang="ko" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('theme');
+                  var isDark = theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+                  if (isDark) document.documentElement.classList.add('dark');
+                } catch(e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
       <body>
+        <SkipLink />
         <QueryProvider>
-          <ToastProvider>{children}</ToastProvider>
+          <AriaAnnouncerProvider>
+            <ToastProvider>{children}</ToastProvider>
+          </AriaAnnouncerProvider>
         </QueryProvider>
       </body>
     </html>

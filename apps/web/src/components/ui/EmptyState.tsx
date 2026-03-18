@@ -21,12 +21,14 @@ export function EmptyState({
 }: EmptyStateProps) {
   return (
     <div className={cn("card py-16 px-6 text-center", className)}>
-      <div className="mx-auto h-16 w-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
-        <Icon className="h-8 w-8 text-gray-300" />
+      <div className="mx-auto h-16 w-16 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-4">
+        <Icon className="h-8 w-8 text-gray-300 dark:text-gray-600" />
       </div>
-      <h3 className="text-sm font-semibold text-gray-900 mb-1">{title}</h3>
+      <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-1">
+        {title}
+      </h3>
       {description && (
-        <p className="text-xs text-gray-500 mb-4 max-w-sm mx-auto">
+        <p className="text-xs text-gray-500 dark:text-gray-400 mb-4 max-w-sm mx-auto">
           {description}
         </p>
       )}

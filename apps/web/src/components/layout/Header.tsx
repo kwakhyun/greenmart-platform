@@ -11,9 +11,12 @@ import {
   X,
   Loader2,
   Github,
+  Command,
 } from "lucide-react";
 import { useDebounce } from "@/hooks";
 import { catalogApi, customerApi, orderApi } from "@/lib/api-client";
+import ThemeToggle from "./ThemeToggle";
+import NotificationBell from "./NotificationBell";
 
 interface HeaderProps {
   title: string;
@@ -169,12 +172,14 @@ export default function Header({ title, description }: HeaderProps) {
   }
 
   return (
-    <header className="sticky top-0 z-30 h-16 border-b border-gray-200 bg-white/80 backdrop-blur-md">
+    <header className="sticky top-0 z-30 h-16 border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md">
       <div className="flex h-full items-center justify-between px-4 lg:px-6">
         <div className="ml-10 lg:ml-0">
-          <h1 className="text-lg font-bold text-gray-900">{title}</h1>
+          <h1 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+            {title}
+          </h1>
           {description && (
-            <p className="text-xs text-gray-500 hidden sm:block">
+            <p className="text-xs text-gray-500 dark:text-gray-400 hidden sm:block">
               {description}
             </p>
           )}
@@ -182,7 +187,7 @@ export default function Header({ title, description }: HeaderProps) {
 
         <div className="flex items-center gap-2 lg:gap-3">
           <div className="relative" ref={containerRef}>
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 z-10" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 dark:text-gray-500 z-10" />
             <input
               ref={inputRef}
               type="text"
@@ -197,7 +202,7 @@ export default function Header({ title, description }: HeaderProps) {
                 if (query.length >= 2) setIsOpen(true);
               }}
               onKeyDown={handleKeyDown}
-              className="h-9 w-40 sm:w-56 lg:w-72 rounded-lg border border-gray-200 bg-gray-50 pl-9 pr-8 text-sm outline-none focus:border-brand-primary focus:bg-white focus:ring-1 focus:ring-brand-primary/30 transition-all"
+              className="h-9 w-40 sm:w-56 lg:w-72 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 pl-9 pr-8 text-sm text-gray-900 dark:text-gray-100 outline-none focus:border-brand-primary focus:bg-white dark:focus:bg-gray-800 focus:ring-1 focus:ring-brand-primary/30 transition-all"
               role="combobox"
               aria-controls="search-results-listbox"
               aria-expanded={isOpen}
@@ -222,20 +227,22 @@ export default function Header({ title, description }: HeaderProps) {
 
             {isOpen && query.length >= 2 && (
               <div
-                className="absolute top-full right-0 mt-1 w-80 sm:w-96 bg-white rounded-xl border border-gray-200 shadow-xl overflow-hidden z-50"
+                className="absolute top-full right-0 mt-1 w-80 sm:w-96 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden z-50"
                 role="listbox"
                 id="search-results-listbox"
               >
                 {isSearching && (
                   <div className="p-4 text-center">
                     <Loader2 className="h-5 w-5 animate-spin text-brand-primary mx-auto" />
-                    <p className="text-xs text-gray-400 mt-1">검색 중...</p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                      검색 중...
+                    </p>
                   </div>
                 )}
                 {!isSearching && results.length === 0 && (
                   <div className="p-6 text-center">
-                    <Search className="h-8 w-8 text-gray-200 mx-auto mb-2" />
-                    <p className="text-sm text-gray-400">
+                    <Search className="h-8 w-8 text-gray-200 dark:text-gray-700 mx-auto mb-2" />
+                    <p className="text-sm text-gray-400 dark:text-gray-500">
                       &quot;{query}&quot;에 대한 결과가 없습니다
                     </p>
                   </div>
@@ -254,18 +261,20 @@ export default function Header({ title, description }: HeaderProps) {
                           aria-selected={isActive}
                           onClick={() => handleSelect(result)}
                           onMouseEnter={() => setActiveIndex(idx)}
-                          className={`w-full flex items-center gap-3 px-4 py-3 transition-colors text-left border-b border-gray-50 last:border-b-0 ${
-                            isActive ? "bg-gray-100" : "hover:bg-gray-50"
+                          className={`w-full flex items-center gap-3 px-4 py-3 transition-colors text-left border-b border-gray-50 dark:border-gray-800 last:border-b-0 ${
+                            isActive
+                              ? "bg-gray-100 dark:bg-gray-800"
+                              : "hover:bg-gray-50 dark:hover:bg-gray-800/50"
                           }`}
                         >
                           <div className={`rounded-lg p-1.5 ${config.color}`}>
                             <Icon className="h-3.5 w-3.5" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-900 truncate">
+                            <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
                               {result.title}
                             </p>
-                            <p className="text-xs text-gray-400 truncate">
+                            <p className="text-xs text-gray-400 dark:text-gray-500 truncate">
                               {result.subtitle}
                             </p>
                           </div>
@@ -277,7 +286,7 @@ export default function Header({ title, description }: HeaderProps) {
                         </button>
                       );
                     })}
-                    <div className="px-4 py-2 text-[10px] text-gray-400 bg-gray-50 border-t border-gray-100">
+                    <div className="px-4 py-2 text-[10px] text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-gray-800/50 border-t border-gray-100 dark:border-gray-800">
                       ↑↓ 이동 · Enter 선택 · Esc 닫기
                     </div>
                   </div>
@@ -290,19 +299,42 @@ export default function Header({ title, description }: HeaderProps) {
             href="https://github.com/kwakhyun/greenmart-platform"
             target="_blank"
             rel="noopener noreferrer"
-            className="group inline-flex items-center gap-2 rounded-lg bg-gray-900 px-4 py-2 text-sm font-semibold text-white shadow-md hover:bg-gray-800 hover:shadow-lg hover:scale-[1.03] active:scale-[0.98] transition-all duration-200"
+            className="group inline-flex items-center gap-2 rounded-lg bg-gray-900 dark:bg-gray-100 px-4 py-2 text-sm font-semibold text-white dark:text-gray-900 shadow-md hover:bg-gray-800 dark:hover:bg-gray-200 hover:shadow-lg hover:scale-[1.03] active:scale-[0.98] transition-all duration-200"
           >
             <Github className="h-[18px] w-[18px] transition-transform duration-200 group-hover:rotate-[360deg]" />
             <span className="hidden sm:inline">GitHub Repo</span>
           </a>
 
-          <div className="hidden sm:flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-1.5">
+          <button
+            onClick={() => {
+              const event = new KeyboardEvent("keydown", {
+                key: "k",
+                metaKey: true,
+                bubbles: true,
+              });
+              document.dispatchEvent(event);
+            }}
+            className="hidden lg:inline-flex items-center gap-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3 py-1.5 text-xs text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+            aria-label="커맨드 팔레트 열기"
+          >
+            <Command className="h-3 w-3" />
+            <span>K</span>
+          </button>
+
+          <NotificationBell />
+          <ThemeToggle />
+
+          <div className="hidden sm:flex items-center gap-2 rounded-lg border border-gray-200 dark:border-gray-700 px-3 py-1.5">
             <div className="h-7 w-7 rounded-full bg-brand-primary/20 flex items-center justify-center">
               <span className="text-xs font-bold text-brand-primary">관</span>
             </div>
             <div className="text-left">
-              <p className="text-xs font-semibold text-gray-900">관리자</p>
-              <p className="text-[10px] text-gray-400">Core Platform</p>
+              <p className="text-xs font-semibold text-gray-900 dark:text-gray-100">
+                관리자
+              </p>
+              <p className="text-[10px] text-gray-400 dark:text-gray-500">
+                Core Platform
+              </p>
             </div>
           </div>
         </div>
