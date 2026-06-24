@@ -1,0 +1,13 @@
+{
+  "npm.exclude": [
+    "**/node_modules/**",
+    "**/.next/**",
+    "**/dist/**",
+    "**/out/**"
+  ],
+  "search.exclude": {
+    "**/.next": true,
+    "**/dist": true,
+    "**/out": true
+  }
+}

@@ -5,6 +5,7 @@ node_modules/
 .next/
 out/
 dist/
+.greenmart/
 
 # Test coverage
 coverage/
@@ -17,7 +18,8 @@ coverage/
 next-env.d.ts
 
 # IDE
-.vscode/settings.json
+.vscode/*
+!.vscode/settings.json
 .idea/
 
 # Environment
