@@ -5,16 +5,13 @@
   <img src="https://img.shields.io/badge/TanStack_Query-5-red?style=flat-square&logo=react-query" />
   <img src="https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=flat-square&logo=tailwind-css" />
   <img src="https://img.shields.io/badge/Zod-3.x-3068B7?style=flat-square" />
-  <img src="https://img.shields.io/badge/Tests-189_passed-brightgreen?style=flat-square" />
+  <img src="https://img.shields.io/badge/MVP-order_request-brightgreen?style=flat-square" />
 </p>
 
-# 🌿 GreenMart Core Platform
+# GreenMart Fresh
 
-> **Health & Beauty 이커머스 어드민 플랫폼**
-> 모노레포 기반 카탈로그 · 커스터머 · 인벤토리 · 세틀먼트 통합 관리 시스템
-
-4개 도메인(카탈로그/커스터머/인벤토리/세틀먼트)의 **풀스택 CRUD 파이프라인**을
-하나의 모노레포에서 타입 안전하게 운영하는 이커머스 코어 플랫폼입니다.
+> **주문 요청 기반 친환경 식료품 커머스 MVP**
+> 고객이 제철 식재료를 고르고 배송 슬롯과 연락처를 남기면, 운영자가 `/admin` 백오피스에서 상품·주문·재고·고객 데이터를 확인하고 후속 안내를 진행하는 MVP 모노레포입니다.
 
 ---
 
@@ -22,7 +19,9 @@
 
 | 영역                 | 구현                                                                                      |
 | -------------------- | ----------------------------------------------------------------------------------------- |
-| **풀스택 CRUD**      | 16개 라우트, 30+ API 엔드포인트, 8개 도메인 모델의 목록/상세/생성/수정/삭제               |
+| **고객용 주문 요청 MVP** | 상품 탐색, 카테고리 필터, 장바구니, 배송 슬롯, 정기배송 옵션, 주문 요청 접수             |
+| **주문 인입 API**    | `POST /api/orders` 검증, 접수번호 발급, 선택형 `GREENMART_ORDER_WEBHOOK_URL` 웹훅 전달      |
+| **운영 백오피스**    | `/admin` 및 카탈로그/커스터머/인벤토리/세틀먼트 라우트의 목록/상세/상태 관리              |
 | **공유 모노레포**    | `@greenmart/shared` 패키지로 TypeScript 타입 + Zod 스키마를 프론트/백엔드 공유            |
 | **⌘K 커맨드 팔레트** | VS Code/Slack 스타일 – 전체 페이지 이동, 테마 전환, 키보드 완전 제어                      |
 | **다크 모드 시스템** | FOUC 방지 인라인 스크립트 + localStorage 연동 + 시스템 테마 자동 감지                     |
@@ -32,8 +31,19 @@
 | **통합 검색**        | 헤더 실시간 검색 (상품/회원/주문), `Promise.allSettled` 병렬 페칭, 키보드 탐색            |
 | **알림 시스템**      | NotificationBell 드롭다운, 읽음/삭제 관리, 미읽은 배지                                    |
 | **CSV 내보내기**     | 회원/주문/정산 목록 데이터 엑셀 다운로드                                                  |
-| **API 문서**         | Swagger `/api/docs`에서 전체 엔드포인트 인터랙티브 테스트                                 |
-| **148+ 테스트**      | Jest + Testing Library + Supertest – 유틸/검증/컴포넌트/훅/API 189개 통합 테스트          |
+| **내장 관리자 API**  | Next.js Route Handler 기반 `/api/admin/*` 조회 API와 주문 요청 API                         |
+| **테스트 구성**      | Jest + Testing Library + Supertest 기반 유틸/검증/컴포넌트/훅/API 테스트 구성             |
+
+---
+
+## 🎯 MVP 범위
+
+이 프로젝트는 실제 결제·실재고·물류 자동화까지 연결된 상용 커머스가 아니라, **고객 주문 요청 → 운영자 확인 → 후속 안내** 흐름을 검증하기 위한 MVP입니다.
+
+- 고객은 상품과 배송 슬롯을 선택하고 주문 요청을 접수할 수 있습니다.
+- 주문 요청은 접수번호를 발급하며, 환경변수 설정 시 외부 운영 도구로 전달할 수 있습니다.
+- 운영자는 백오피스에서 상품, 고객, 재고, 배송, 주문, 정산성 데이터를 확인하고 상태를 관리할 수 있습니다.
+- 결제 승인, 회원 인증, 실시간 재고 DB, 실제 배송사 연동, 정기결제는 MVP 범위에 포함하지 않았습니다.
 
 ---
 
@@ -42,10 +52,13 @@
 ```
 greenmart-platform/
 ├── apps/
-│   ├── web/                         # Next.js 14 프론트엔드 (관리자 대시보드)
+│   ├── web/                         # Next.js 14 프론트엔드 (고객 주문 MVP + 운영 백오피스)
 │   │   └── src/
-│   │       ├── app/(dashboard)/     # 16개 라우트 (목록 + 상세 페이지)
+│   │       ├── app/(dashboard)/     # 고객 홈 + 운영 라우트
+│   │       ├── app/api/orders/      # 고객 주문 요청 접수 API
+│   │       ├── app/api/admin/       # 운영 백오피스용 내장 API
 │   │       ├── components/
+│   │       │   ├── service/         # GreenMart Fresh 고객용 주문 화면
 │   │       │   ├── dashboard/       # StatCard (memo), Charts (memo), AnimatedNumber
 │   │       │   ├── forms/           # CRUD 모달 (상품/회원/주문 상태/삭제 확인)
 │   │       │   ├── layout/          # Header, Sidebar, CommandPalette, ThemeToggle, NotificationBell
@@ -53,7 +66,7 @@ greenmart-platform/
 │   │       │   └── ui/             # Skeleton, Modal, Toast, Pagination, Badge, Breadcrumb...
 │   │       ├── hooks/               # 15개 커스텀 훅 (도메인 쿼리 7 + 유틸리티 8)
 │   │       └── lib/                 # API Client, 유틸, 상수, 검증, CSV 내보내기
-│   └── api/                         # Express REST API 서버
+│   └── api/                         # Express REST API 서버 (분리형 API 참고 구현)
 │       └── src/
 │           ├── routes/              # 4개 도메인 라우터 (30+ 엔드포인트)
 │           ├── services/            # 비즈니스 로직 계층
@@ -177,21 +190,23 @@ npm install
 # 환경 변수
 cp .env.example .env
 
+# 선택: 주문 요청을 외부 운영 도구로 전달
+GREENMART_ORDER_WEBHOOK_URL=https://example.com/webhook
+
 # 전체 빌드 (shared → api → web)
 npm run build
 
-# 개발 서버 (웹 + API 동시 실행)
-npm run dev          # http://localhost:3000 + http://localhost:4000
-
-# 개별 실행
+# MVP 실행 (고객 화면 + 운영 백오피스 + 내장 API)
 npm run dev:web      # http://localhost:3000
+
+# 선택: 분리형 Express API 참고 서버
 npm run dev:api      # http://localhost:4000
 ```
 
 ### 테스트
 
 ```bash
-# 전체 테스트 (API 27 + Web 162 = 189)
+# 전체 테스트
 npm test
 
 # 커버리지 포함
@@ -215,7 +230,8 @@ npm run type-check
 
 | 라우트                         | 설명          | 주요 기능                                                                    |
 | ------------------------------ | ------------- | ---------------------------------------------------------------------------- |
-| `/`                            | 대시보드      | KPI 카드(AnimatedNumber), 매출 차트, 카테고리 파이차트, 인기 상품, 최근 주문 |
+| `/`                            | 고객 주문 MVP | 상품 탐색, 장바구니, 배송 슬롯, 정기배송 옵션, 주문 요청                       |
+| `/admin`                       | 운영 대시보드 | KPI 카드(AnimatedNumber), 매출 차트, 카테고리 파이차트, 인기 상품, 최근 주문 |
 | `/catalog/products`            | 상품 관리     | 검색, 카테고리/브랜드 필터, 그리드/테이블 뷰, 등록/수정/삭제 모달            |
 | `/catalog/products/[id]`       | 상품 상세     | 이미지, 가격/할인, 리뷰 분포 차트, 태그, 채널                                |
 | `/customer/members`            | 회원 관리     | 등급/상태/채널 필터, 등록/삭제, CSV 내보내기                                 |
@@ -228,7 +244,7 @@ npm run type-check
 | `/inventory/delivery`          | 배송 목록     | 상태/유형 필터, 타임라인 트래커                                              |
 | `/inventory/delivery/[id]`     | 배송 상세     | 진행 단계, 배송/수령 정보, 타임라인                                          |
 | `/settlement/orders`           | 주문 관리     | 상태 탭, 주문 상태 변경, CSV 내보내기                                        |
-| `/settlement/orders/[id]`      | 주문 상세     | 상품 목록, 결제 정보, 상태 변경                                              |
+| `/settlement/orders/[id]`      | 주문 상세     | 상품 목록, 결제 수단/금액 정보, 상태 변경                                    |
 | `/settlement/settlements`      | 정산 목록     | 기간/상태 필터, 파트너사별 테이블, CSV                                       |
 | `/settlement/settlements/[id]` | 정산 상세     | 정산 내역, 수수료 구조, 지급 정보                                            |
 
@@ -238,34 +254,25 @@ npm run type-check
 
 | 엔드포인트                          | 메서드         | 설명                                |
 | ----------------------------------- | -------------- | ----------------------------------- |
-| `/api/health`                       | GET            | 헬스 체크                           |
-| `/api/docs`                         | GET            | Swagger API 문서                    |
-| **카탈로그**                        |                |                                     |
-| `/api/catalog/products`             | GET/POST       | 상품 목록(필터/페이지네이션) / 등록 |
-| `/api/catalog/products/:id`         | GET/PUT/DELETE | 상품 상세 / 수정 / 삭제             |
-| `/api/catalog/categories`           | GET            | 카테고리 목록                       |
-| `/api/catalog/brands`               | GET            | 브랜드 목록                         |
-| **커스터머**                        |                |                                     |
-| `/api/customer/members`             | GET/POST       | 회원 목록 / 등록                    |
-| `/api/customer/members/:id`         | GET/DELETE     | 회원 상세 / 삭제                    |
-| `/api/customer/promotions`          | GET            | 프로모션 목록                       |
-| `/api/customer/promotions/:id`      | GET            | 프로모션 상세                       |
-| `/api/customer/coupons`             | GET            | 쿠폰 목록                           |
-| `/api/customer/voc`                 | GET            | VOC 목록                            |
-| `/api/customer/voc/:id`             | GET            | VOC 상세                            |
-| **인벤토리**                        |                |                                     |
-| `/api/inventory/warehouses`         | GET            | 창고 목록                           |
-| `/api/inventory/stock`              | GET            | 재고 목록                           |
-| `/api/inventory/deliveries`         | GET            | 배송 목록                           |
-| `/api/inventory/deliveries/:id`     | GET            | 배송 상세                           |
-| `/api/inventory/movements`          | GET            | 재고 이동 내역                      |
-| **세틀먼트**                        |                |                                     |
-| `/api/settlement/orders`            | GET            | 주문 목록                           |
-| `/api/settlement/orders/:id`        | GET            | 주문 상세                           |
-| `/api/settlement/orders/:id/status` | PATCH          | 주문 상태 변경                      |
-| `/api/settlement/settlements`       | GET            | 정산 목록                           |
-| `/api/settlement/settlements/:id`   | GET            | 정산 상세                           |
-| `/api/settlement/dashboard`         | GET            | 대시보드 요약                       |
+| `/api/orders`                       | POST           | 고객 주문 요청 접수, 접수번호 발급, 선택형 웹훅 전달 |
+| `/api/admin/catalog/products`       | GET/POST       | 운영 상품 목록 / 등록               |
+| `/api/admin/catalog/products/:id`   | GET/PUT/DELETE | 운영 상품 상세 / 수정 / 삭제        |
+| `/api/admin/catalog/categories`     | GET            | 운영 카테고리 목록                  |
+| `/api/admin/catalog/brands`         | GET            | 운영 공급자 목록                    |
+| `/api/admin/customer/members`       | GET/POST       | 운영 회원 목록 / 등록               |
+| `/api/admin/customer/members/:id`   | GET/DELETE     | 운영 회원 상세 / 삭제               |
+| `/api/admin/customer/promotions`    | GET            | 운영 프로모션 목록                  |
+| `/api/admin/customer/coupons`       | GET            | 운영 쿠폰 목록                      |
+| `/api/admin/customer/voc`           | GET            | 운영 VOC 목록                       |
+| `/api/admin/inventory/warehouses`   | GET            | 운영 창고 목록                      |
+| `/api/admin/inventory/stock`        | GET            | 운영 재고 목록                      |
+| `/api/admin/inventory/deliveries`   | GET            | 운영 배송 목록                      |
+| `/api/admin/settlement/orders`      | GET            | 운영 주문 목록                      |
+| `/api/admin/settlement/orders/:id/status` | PATCH    | 운영 주문 상태 변경                 |
+| `/api/admin/settlement/settlements` | GET            | 운영 정산 목록                      |
+| `/api/admin/settlement/dashboard`   | GET            | 운영 대시보드 요약                  |
+
+`apps/api`의 Express 서버는 분리형 REST API 참고 구현입니다. MVP 기본 실행과 운영 백오피스 조회는 Next.js 내장 API(`/api/admin/*`)를 사용합니다.
 
 ---
 
@@ -274,10 +281,10 @@ npm run type-check
 | 구분           | 기술                                                                                |
 | -------------- | ----------------------------------------------------------------------------------- |
 | **프론트엔드** | Next.js 14, React 18, Tailwind CSS, Recharts, TanStack Query v5, Zustand            |
-| **백엔드**     | Express, Node.js, TypeScript, Swagger/OpenAPI, Winston                              |
+| **백엔드/API** | Next.js Route Handlers, Express 참고 API, Node.js, TypeScript                       |
 | **공유 검증**  | Zod (프론트엔드 & 백엔드 동일 스키마)                                               |
 | **테스트**     | Jest, React Testing Library, Supertest                                              |
-| **아키텍처**   | npm workspaces 모노레포, Controller → Service → Repository                          |
+| **아키텍처**   | npm workspaces 모노레포, 고객 주문 요청 API, 운영 백오피스 API, 공유 타입/검증       |
 | **UI/UX**      | 다크 모드, ⌘K 커맨드 팔레트, 스켈레톤 UI, 페이지 전환 애니메이션, 스크롤 프로그레스 |
 | **접근성**     | WCAG 2.1 기준 — Skip Link, ARIA Live, Focus Trap, 키보드 네비게이션, 모션 감소      |
 | **성능**       | React.memo, Lazy Section, AnimatedNumber, optimizePackageImports, standalone 빌드   |

@@ -1,7 +1,7 @@
 {
   "name": "greenmart-platform",
   "version": "1.0.0",
-  "description": "Health & Beauty E-Commerce Core Platform - 모노레포 기반 카탈로그/커스터머/인벤토리/세틀먼트 통합 관리 플랫폼",
+  "description": "GreenMart Fresh - 친환경 식료품 주문/정기배송 서비스와 운영 백오피스",
   "private": true,
   "workspaces": [
     "packages/*",
