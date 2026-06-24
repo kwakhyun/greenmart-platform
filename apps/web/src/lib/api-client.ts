@@ -19,7 +19,7 @@ import type {
 import type { CustomerFormData, ProductFormData } from "@greenmart/shared";
 
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api";
+  process.env.NEXT_PUBLIC_ADMIN_API_URL || "/api/admin";
 
 const DEFAULT_TIMEOUT = 10_000;
 const MAX_RETRIES = 2;

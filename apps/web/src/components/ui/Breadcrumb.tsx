@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { ChevronRight, Home } from "lucide-react";
 
 const pathLabels: Record<string, string> = {
+  admin: "운영 대시보드",
   catalog: "카탈로그",
   products: "상품 관리",
   customer: "커스터머",
@@ -47,11 +48,11 @@ export function Breadcrumb() {
       <ol className="flex items-center gap-1 text-xs">
         <li>
           <Link
-            href="/"
+            href="/admin"
             className="inline-flex items-center gap-1 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
           >
             <Home className="h-3 w-3" />
-            <span className="sr-only">홈</span>
+            <span className="sr-only">운영 홈</span>
           </Link>
         </li>
         {crumbs.map((crumb) => (

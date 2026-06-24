@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import {
   Search,
+  Store,
   LayoutDashboard,
   Package,
   Users,
@@ -52,11 +53,19 @@ export default function CommandPalette() {
   const commands: CommandItem[] = useMemo(
     () => [
       {
+        id: "service-home",
+        label: "서비스 홈",
+        category: "페이지",
+        icon: Store,
+        action: () => router.push("/"),
+        keywords: ["서비스", "고객", "fresh", "store", "shop"],
+      },
+      {
         id: "dashboard",
-        label: "대시보드",
+        label: "운영 대시보드",
         category: "페이지",
         icon: LayoutDashboard,
-        action: () => router.push("/"),
+        action: () => router.push("/admin"),
         keywords: ["홈", "home", "dashboard"],
       },
       {

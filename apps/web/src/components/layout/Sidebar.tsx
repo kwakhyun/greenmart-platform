@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
+  Store,
   Package,
   Users,
   Warehouse,
@@ -24,7 +25,8 @@ import { useKeyboardShortcut } from "@/hooks/useKeyboardShortcut";
 import { useSidebarStore } from "@/stores/sidebar-store";
 
 const navigation = [
-  { name: "대시보드", href: "/", icon: LayoutDashboard },
+  { name: "서비스 홈", href: "/", icon: Store },
+  { name: "운영 대시보드", href: "/admin", icon: LayoutDashboard },
   { divider: true, label: "카탈로그 플랫폼" },
   { name: "상품 관리", href: "/catalog/products", icon: Package },
   { divider: true, label: "커스터머 플랫폼" },
@@ -78,21 +80,28 @@ export default function Sidebar() {
           isCollapsed ? "justify-center px-2" : "justify-between px-5",
         )}
       >
-        <div className="flex items-center gap-2.5">
+        <Link
+          href="/"
+          className={cn(
+            "flex items-center gap-2.5 rounded-lg transition-colors hover:bg-gray-100 dark:hover:bg-gray-800",
+            isCollapsed ? "p-0" : "-m-2 p-2",
+          )}
+          aria-label="서비스 홈으로 이동"
+        >
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-primary flex-shrink-0">
             <Leaf className="h-5 w-5 text-white" />
           </div>
           {!isCollapsed && (
             <div>
               <h1 className="text-sm font-bold text-gray-900 dark:text-gray-100">
-                Core Platform
+                GreenMart Ops
               </h1>
               <p className="text-[10px] text-gray-400 dark:text-gray-500">
-                Health & Beauty Commerce
+                Fresh Commerce
               </p>
             </div>
           )}
-        </div>
+        </Link>
         <button
           onClick={() => setIsMobileOpen(false)}
           className="lg:hidden rounded-lg p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
@@ -151,6 +160,8 @@ export default function Sidebar() {
             const isActive =
               item.href === "/"
                 ? pathname === "/"
+                : item.href === "/admin"
+                ? pathname === "/admin"
                 : pathname.startsWith(item.href);
             const Icon = item.icon;
 
