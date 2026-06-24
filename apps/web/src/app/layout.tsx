@@ -5,9 +5,13 @@ import { ToastProvider, SkipLink } from "@/components/ui";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "GreenMart Core Platform",
+  title: "GreenMart Fresh",
   description:
-    "헬스&뷰티 이커머스 코어 플랫폼 - 카탈로그 · 커스터머 · 인벤토리 · 세틀먼트",
+    "산지 직송 제철 식재료를 원하는 배송 슬롯에 맞춰 받는 친환경 식료품 주문 서비스",
+  icons: {
+    icon: "/favicon.svg",
+    apple: "/app-icon.svg",
+  },
 };
 
 export default function RootLayout({

@@ -5,6 +5,7 @@ import CommandPalette from "@/components/layout/CommandPalette";
 import { ShortcutHelpModal } from "@/components/layout/ShortcutHelpModal";
 import { ScrollProgress, Breadcrumb, PageTransition } from "@/components/ui";
 import { useSidebarStore } from "@/stores/sidebar-store";
+import { usePathname } from "next/navigation";
 
 export default function DashboardLayout({
   children,
@@ -12,6 +13,11 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const isCollapsed = useSidebarStore((s) => s.isCollapsed);
+  const pathname = usePathname();
+
+  if (pathname === "/") {
+    return <>{children}</>;
+  }
 
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-950">
