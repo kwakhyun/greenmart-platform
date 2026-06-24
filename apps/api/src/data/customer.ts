@@ -1,4 +1,9 @@
-import { Customer, Coupon, Promotion, CustomerVoice } from "@greenmart/shared";
+import type {
+  Coupon,
+  Customer,
+  CustomerVoice,
+  Promotion,
+} from "@greenmart/shared";
 
 export const customers: Customer[] = [
   {

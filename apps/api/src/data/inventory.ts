@@ -1,9 +1,9 @@
-import {
+import type {
   Warehouse,
   InventoryItem,
   Delivery,
   StockMovement,
-  type DeliveryStatus,
+  DeliveryStatus,
 } from "@greenmart/shared";
 
 export const warehouses: Warehouse[] = [

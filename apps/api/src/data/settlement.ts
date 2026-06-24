@@ -1,4 +1,4 @@
-import { Order, Settlement, DashboardSummary } from "@greenmart/shared";
+import type { DashboardSummary, Order, Settlement } from "@greenmart/shared";
 
 const image = {
   vegBox:

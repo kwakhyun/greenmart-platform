@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { z } from "zod";
-import { CustomerFormSchema, ProductFormSchema } from "@greenmart/shared";
 import type {
   Brand,
   Category,
@@ -12,6 +11,7 @@ import type {
   Product,
   Settlement,
 } from "@greenmart/shared";
+import { CustomerFormSchema, ProductFormSchema } from "../../lib/admin-schemas";
 import {
   DB_COLLECTIONS,
   deleteRecord,

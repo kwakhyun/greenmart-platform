@@ -1,9 +1,9 @@
-import {
+import type {
   Brand,
   Category,
   Product,
-  type ProductTag,
-  type SalesChannel,
+  ProductTag,
+  SalesChannel,
 } from "@greenmart/shared";
 
 export const categories: Category[] = [
