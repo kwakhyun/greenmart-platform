@@ -22,8 +22,9 @@ import {
 import { useToast } from "@/components/ui";
 import { cn } from "@/lib/utils";
 
-type Product = {
+export type ServiceProduct = {
   id: string;
+  catalogProductId: string;
   name: string;
   farm: string;
   category: "채소" | "과일" | "간편식" | "유제품";
@@ -35,18 +36,24 @@ type Product = {
   stock: number;
 };
 
-type DeliverySlot = {
+export type DeliverySlot = {
   id: string;
   label: string;
   time: string;
   capacity: string;
 };
 
-type SubscriptionPlan = {
-  id: string;
+export type SubscriptionPlan = {
+  id: "once" | "weekly" | "biweekly";
   title: string;
   summary: string;
   discount: string;
+};
+
+export type ServiceCatalog = {
+  products: ServiceProduct[];
+  deliverySlots: DeliverySlot[];
+  subscriptionPlans: SubscriptionPlan[];
 };
 
 type CustomerForm = {
@@ -55,114 +62,6 @@ type CustomerForm = {
   address: string;
   note: string;
 };
-
-const products: Product[] = [
-  {
-    id: "box-seasonal",
-    name: "이번 주 제철 채소 박스",
-    farm: "양평 새벽농장",
-    category: "채소",
-    price: 28900,
-    unit: "1박스",
-    image:
-      "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=900&q=80",
-    description: "샐러드 채소, 구이용 뿌리채소, 허브를 산지 상황에 맞춰 구성합니다.",
-    badges: ["당일 수확", "무농약"],
-    stock: 18,
-  },
-  {
-    id: "fruit-morning",
-    name: "아침 과일 세트",
-    farm: "상주 햇살과수원",
-    category: "과일",
-    price: 24600,
-    unit: "6입",
-    image:
-      "https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=900&q=80",
-    description: "사과, 배, 감귤을 소가구 냉장 보관량에 맞춰 소포장했습니다.",
-    badges: ["저당 선별", "소포장"],
-    stock: 24,
-  },
-  {
-    id: "salad-kit",
-    name: "5분 샐러드 키트",
-    farm: "성수 키친랩",
-    category: "간편식",
-    price: 11900,
-    unit: "2인분",
-    image:
-      "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=900&q=80",
-    description: "세척 채소, 곡물 토핑, 드레싱을 한 팩에 담은 평일 점심 키트입니다.",
-    badges: ["조리 없음", "비건 옵션"],
-    stock: 32,
-  },
-  {
-    id: "milk-yogurt",
-    name: "목장 요거트 번들",
-    farm: "홍성 작은목장",
-    category: "유제품",
-    price: 16800,
-    unit: "4개",
-    image:
-      "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=900&q=80",
-    description: "저온 발효 요거트와 그래놀라를 함께 받을 수 있는 아침 번들입니다.",
-    badges: ["무가당", "냉장배송"],
-    stock: 15,
-  },
-  {
-    id: "roots-pack",
-    name: "구이용 뿌리채소 팩",
-    farm: "괴산 흙담농원",
-    category: "채소",
-    price: 13200,
-    unit: "900g",
-    image:
-      "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=900&q=80",
-    description: "당근, 비트, 감자를 손질해 오븐과 에어프라이어에 바로 넣기 좋습니다.",
-    badges: ["흙당일 제거", "구이 추천"],
-    stock: 27,
-  },
-  {
-    id: "soup-pack",
-    name: "퇴근 후 수프 팩",
-    farm: "GreenMart 키친",
-    category: "간편식",
-    price: 14900,
-    unit: "2팩",
-    image:
-      "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80",
-    description: "제철 채소를 갈아 만든 냉장 수프입니다. 데우기만 하면 됩니다.",
-    badges: ["저염", "냉장배송"],
-    stock: 21,
-  },
-];
-
-const deliverySlots: DeliverySlot[] = [
-  { id: "thu-am", label: "목요일", time: "07:00 - 10:00", capacity: "6자리" },
-  { id: "fri-pm", label: "금요일", time: "18:00 - 21:00", capacity: "9자리" },
-  { id: "sat-am", label: "토요일", time: "08:00 - 11:00", capacity: "4자리" },
-];
-
-const subscriptionPlans: SubscriptionPlan[] = [
-  {
-    id: "once",
-    title: "한 번만 받기",
-    summary: "필요할 때 주문",
-    discount: "기본가",
-  },
-  {
-    id: "weekly",
-    title: "매주 받기",
-    summary: "식단 루틴에 맞춘 자동 구성",
-    discount: "7% 절약",
-  },
-  {
-    id: "biweekly",
-    title: "격주 받기",
-    summary: "소가구 냉장고에 맞는 주기",
-    discount: "4% 절약",
-  },
-];
 
 const categories = ["전체", "채소", "과일", "간편식", "유제품"] as const;
 
@@ -173,16 +72,21 @@ const formatCurrency = (amount: number) =>
     maximumFractionDigits: 0,
   }).format(amount);
 
-export function GreenMartService() {
+export function GreenMartService({ catalog }: { catalog: ServiceCatalog }) {
   const { toast } = useToast();
+  const { products, deliverySlots, subscriptionPlans } = catalog;
   const [category, setCategory] = useState<(typeof categories)[number]>("전체");
   const [query, setQuery] = useState("");
   const [cart, setCart] = useState<Record<string, number>>({
     "box-seasonal": 1,
     "salad-kit": 1,
   });
-  const [selectedSlot, setSelectedSlot] = useState(deliverySlots[0].id);
-  const [selectedPlan, setSelectedPlan] = useState(subscriptionPlans[0].id);
+  const [selectedSlot, setSelectedSlot] = useState(
+    deliverySlots[0]?.id ?? "",
+  );
+  const [selectedPlan, setSelectedPlan] = useState(
+    subscriptionPlans[0]?.id ?? "once",
+  );
   const [form, setForm] = useState<CustomerForm>({
     name: "",
     phone: "",
@@ -205,14 +109,14 @@ export function GreenMartService() {
 
       return matchesCategory && matchesQuery;
     });
-  }, [category, query]);
+  }, [category, products, query]);
 
   const cartLines = useMemo(
     () =>
       products
         .map((product) => ({ product, quantity: cart[product.id] ?? 0 }))
         .filter((line) => line.quantity > 0),
-    [cart],
+    [cart, products],
   );
 
   const subtotal = cartLines.reduce(

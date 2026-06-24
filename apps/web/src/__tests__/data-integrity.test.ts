@@ -13,7 +13,7 @@ import {
 } from "@/data/inventory";
 import { orders, settlements, dashboardSummary } from "@/data/settlement";
 
-describe("Mock Data Integrity", () => {
+describe("Seed Data Integrity", () => {
   describe("Catalog Data", () => {
     it("should have products with valid brands", () => {
       products.forEach((p) => {

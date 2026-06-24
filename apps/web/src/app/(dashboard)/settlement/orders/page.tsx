@@ -3,7 +3,13 @@
 import { useState } from "react";
 import Link from "next/link";
 import Header from "@/components/layout/Header";
-import { useOrders, useDebounce } from "@/hooks";
+import {
+  useOrders,
+  useOrderRequests,
+  useRetryOrderRequestWebhooks,
+  useUpdateOrderRequestStatus,
+  useDebounce,
+} from "@/hooks";
 import {
   cn,
   formatCurrency,
@@ -12,11 +18,47 @@ import {
   getPaymentMethodLabel,
   getStatusColor,
 } from "@/lib/utils";
-import { Search, Download, Loader2, RefreshCw } from "lucide-react";
+import {
+  AlertTriangle,
+  CheckCircle2,
+  Download,
+  Headphones,
+  RefreshCw,
+  Search,
+  TimerReset,
+} from "lucide-react";
 import type { Order } from "@greenmart/shared";
+import type { OrderRequestStatus } from "@/lib/api-client";
 import { OrderStatusModal } from "@/components/forms";
 import { exportToCSV } from "@/lib/export-excel";
 import { useToast } from "@/components/ui/Toast";
+
+const requestStatusLabels: Record<OrderRequestStatus, string> = {
+  RECEIVED: "접수",
+  CONTACTED: "연락 완료",
+  CONFIRMED: "확정",
+  CANCELLED: "취소",
+};
+
+const requestStatusColors: Record<OrderRequestStatus, string> = {
+  RECEIVED: "bg-yellow-100 text-yellow-800",
+  CONTACTED: "bg-blue-100 text-blue-800",
+  CONFIRMED: "bg-green-100 text-green-800",
+  CANCELLED: "bg-gray-100 text-gray-700",
+};
+
+const riskColors = {
+  LOW: "bg-green-100 text-green-800",
+  MEDIUM: "bg-amber-100 text-amber-800",
+  HIGH: "bg-red-100 text-red-800",
+} as const;
+
+const webhookLabels = {
+  NOT_CONFIGURED: "미설정",
+  PENDING: "대기",
+  DELIVERED: "전달 완료",
+  FAILED: "실패",
+} as const;
 
 export default function OrdersPage() {
   const [statusFilter, setStatusFilter] = useState("");
@@ -26,6 +68,13 @@ export default function OrdersPage() {
   const debouncedSearch = useDebounce(search, 300);
   const { toast } = useToast();
 
+  const { data: requestData, isLoading: isRequestLoading } = useOrderRequests({
+    page: 1,
+    size: 5,
+    search: debouncedSearch || undefined,
+  });
+  const updateRequestStatus = useUpdateOrderRequestStatus();
+  const retryWebhooks = useRetryOrderRequestWebhooks();
   const { data, isLoading, isError, error } = useOrders({
     page,
     size: 20,
@@ -43,6 +92,61 @@ export default function OrdersPage() {
     CANCELLED: 0,
   };
 
+  const orderRequests = requestData?.items ?? [];
+  const requestSummary = requestData?.summary ?? {
+    total: 0,
+    received: 0,
+    contacted: 0,
+    confirmed: 0,
+    cancelled: 0,
+    highRisk: 0,
+    webhookFailed: 0,
+    slaBreached: 0,
+  };
+
+  const handleRequestStatusChange = (
+    id: string,
+    status: OrderRequestStatus,
+  ) => {
+    updateRequestStatus.mutate(
+      { id, status },
+      {
+        onSuccess: () => {
+          toast("success", "주문 요청 상태가 변경되었습니다.");
+        },
+        onError: (mutationError) => {
+          toast(
+            "error",
+            mutationError instanceof Error
+              ? mutationError.message
+              : "주문 요청 상태를 변경하지 못했습니다.",
+          );
+        },
+      },
+    );
+  };
+
+  const handleWebhookRetry = () => {
+    retryWebhooks.mutate(undefined, {
+      onSuccess: (result) => {
+        toast(
+          result.delivered > 0 ? "success" : "info",
+          result.delivered > 0
+            ? `${result.delivered}건의 웹훅 전달을 완료했습니다.`
+            : "재시도 가능한 웹훅 작업이 없습니다.",
+        );
+      },
+      onError: (mutationError) => {
+        toast(
+          "error",
+          mutationError instanceof Error
+            ? mutationError.message
+            : "웹훅 재시도에 실패했습니다.",
+        );
+      },
+    });
+  };
+
   return (
     <>
       <Header
@@ -50,6 +154,249 @@ export default function OrdersPage() {
         description="세틀먼트 플랫폼 · 주문 처리 및 결제 관리"
       />
       <div className="p-6 space-y-6 animate-fade-in">
+        <section className="grid gap-4 md:grid-cols-4">
+          {[
+            {
+              label: "접수 대기",
+              value: requestSummary.received,
+              icon: Headphones,
+              tone: "text-yellow-700 bg-yellow-50",
+            },
+            {
+              label: "고위험 요청",
+              value: requestSummary.highRisk,
+              icon: AlertTriangle,
+              tone: "text-red-700 bg-red-50",
+            },
+            {
+              label: "웹훅 실패",
+              value: requestSummary.webhookFailed,
+              icon: RefreshCw,
+              tone: "text-blue-700 bg-blue-50",
+            },
+            {
+              label: "SLA 초과",
+              value: requestSummary.slaBreached,
+              icon: TimerReset,
+              tone: "text-gray-700 bg-gray-50",
+            },
+          ].map((metric) => {
+            const Icon = metric.icon;
+
+            return (
+              <div key={metric.label} className="card p-4">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-xs font-medium text-gray-500">
+                      {metric.label}
+                    </p>
+                    <p className="mt-1 text-2xl font-semibold text-gray-900">
+                      {metric.value.toLocaleString("ko-KR")}
+                    </p>
+                  </div>
+                  <span
+                    className={cn(
+                      "inline-flex h-10 w-10 items-center justify-center rounded-lg",
+                      metric.tone,
+                    )}
+                  >
+                    <Icon className="h-5 w-5" aria-hidden="true" />
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+        </section>
+
+        <section className="card overflow-hidden">
+          <div className="flex flex-col gap-2 border-b border-gray-100 p-5 md:flex-row md:items-center md:justify-between">
+            <div>
+              <h2 className="text-base font-semibold text-gray-900">
+                고객 주문 요청 큐
+              </h2>
+              <p className="mt-1 text-xs text-gray-500">
+                중복 방지, 가격 검산, 재고 리스크, 외부 운영 도구 전달 상태를
+                함께 추적합니다.
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-gray-500">
+                총 {requestSummary.total.toLocaleString("ko-KR")}건
+              </span>
+              <button
+                type="button"
+                className="btn-secondary px-3 py-2 text-xs"
+                disabled={
+                  retryWebhooks.isPending || requestSummary.webhookFailed === 0
+                }
+                onClick={handleWebhookRetry}
+              >
+                <RefreshCw className="mr-1 h-3 w-3" aria-hidden="true" />
+                웹훅 재시도
+              </button>
+            </div>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50 border-b border-gray-200">
+                <tr>
+                  <th className="table-header">접수번호</th>
+                  <th className="table-header">고객</th>
+                  <th className="table-header">요청 상품</th>
+                  <th className="table-header">배송 슬롯</th>
+                  <th className="table-header">금액</th>
+                  <th className="table-header">리스크</th>
+                  <th className="table-header">웹훅</th>
+                  <th className="table-header">SLA</th>
+                  <th className="table-header">처리</th>
+                </tr>
+              </thead>
+              <tbody>
+                {isRequestLoading &&
+                  Array.from({ length: 3 }).map((_, row) => (
+                    <tr key={row} className="border-b border-gray-50">
+                      {Array.from({ length: 9 }).map((__, cell) => (
+                        <td key={cell} className="table-cell">
+                          <div className="h-3 w-20 rounded bg-gray-100" />
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+
+                {!isRequestLoading &&
+                  orderRequests.map((request) => (
+                    <tr
+                      key={request.id}
+                      className="border-b border-gray-50 hover:bg-gray-50/80"
+                    >
+                      <td className="table-cell">
+                        <div className="font-mono text-xs font-semibold text-brand-primary">
+                          {request.orderNumber}
+                        </div>
+                        <div className="mt-1 text-xs text-gray-400">
+                          {formatDateTime(request.acceptedAt)}
+                        </div>
+                      </td>
+                      <td className="table-cell">
+                        <div className="font-medium text-gray-900">
+                          {request.customer.name}
+                        </div>
+                        <div className="mt-1 text-xs text-gray-500">
+                          {request.customer.phone}
+                        </div>
+                      </td>
+                      <td className="table-cell">
+                        <div className="text-sm font-medium text-gray-900">
+                          {request.items[0]?.name}
+                          {request.items.length > 1 &&
+                            ` 외 ${request.items.length - 1}건`}
+                        </div>
+                        <div className="mt-1 text-xs text-gray-500">
+                          {request.subscriptionPlan.title}
+                        </div>
+                      </td>
+                      <td className="table-cell text-sm">
+                        <div>{request.deliverySlot.label}</div>
+                        <div className="text-xs text-gray-500">
+                          {request.deliverySlot.time}
+                        </div>
+                      </td>
+                      <td className="table-cell font-semibold">
+                        {formatCurrency(request.pricing.total)}
+                      </td>
+                      <td className="table-cell">
+                        <span
+                          className={cn(
+                            "badge",
+                            riskColors[request.fulfillmentRisk],
+                          )}
+                          title={request.riskReasons.join(", ") || "정상"}
+                        >
+                          {request.fulfillmentRisk}
+                        </span>
+                      </td>
+                      <td className="table-cell">
+                        <span className="text-xs text-gray-600">
+                          {webhookLabels[request.webhookSyncStatus]}
+                          {request.webhookAttempts > 0 &&
+                            ` · ${request.webhookAttempts}회`}
+                        </span>
+                        {request.nextWebhookAttemptAt &&
+                          request.webhookSyncStatus === "FAILED" && (
+                            <div className="mt-1 text-xs text-gray-400">
+                              다음 {formatDateTime(request.nextWebhookAttemptAt)}
+                            </div>
+                          )}
+                      </td>
+                      <td className="table-cell text-xs text-gray-500">
+                        {formatDateTime(request.slaDueAt)}
+                      </td>
+                      <td className="table-cell">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span
+                            className={cn(
+                              "badge",
+                              requestStatusColors[request.status],
+                            )}
+                          >
+                            {requestStatusLabels[request.status]}
+                          </span>
+                          {request.status === "RECEIVED" && (
+                            <button
+                              type="button"
+                              className="btn-secondary px-2 py-1 text-xs"
+                              disabled={updateRequestStatus.isPending}
+                              onClick={() =>
+                                handleRequestStatusChange(
+                                  request.id,
+                                  "CONTACTED",
+                                )
+                              }
+                            >
+                              연락 완료
+                            </button>
+                          )}
+                          {request.status !== "CONFIRMED" &&
+                            request.status !== "CANCELLED" && (
+                              <button
+                                type="button"
+                                className="inline-flex items-center gap-1 rounded-md bg-brand-primary px-2 py-1 text-xs font-medium text-white transition-colors hover:bg-brand-primary/90 disabled:opacity-50"
+                                disabled={updateRequestStatus.isPending}
+                                onClick={() =>
+                                  handleRequestStatusChange(
+                                    request.id,
+                                    "CONFIRMED",
+                                  )
+                                }
+                              >
+                                <CheckCircle2
+                                  className="h-3 w-3"
+                                  aria-hidden="true"
+                                />
+                                확정
+                              </button>
+                            )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+
+                {!isRequestLoading && orderRequests.length === 0 && (
+                  <tr>
+                    <td
+                      colSpan={9}
+                      className="table-cell py-10 text-center text-gray-400"
+                    >
+                      접수된 주문 요청이 없습니다.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
         <div className="flex gap-2 flex-wrap" role="tablist">
           {[
             { key: "", label: "전체", count: statusCounts.total },

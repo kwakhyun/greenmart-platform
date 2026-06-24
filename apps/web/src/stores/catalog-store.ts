@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { products as initialProducts } from "@/data/catalog";
 import { Product, ProductFilter, PaginatedResponse } from "@/types/catalog";
 
 interface CatalogState {
@@ -8,6 +7,7 @@ interface CatalogState {
   currentPage: number;
   pageSize: number;
 
+  setProducts: (products: Product[]) => void;
   setFilter: (filter: Partial<ProductFilter>) => void;
   resetFilter: () => void;
   setPage: (page: number) => void;
@@ -20,10 +20,12 @@ const defaultFilter: ProductFilter = {
 };
 
 export const useCatalogStore = create<CatalogState>((set, get) => ({
-  products: initialProducts,
+  products: [],
   filter: defaultFilter,
   currentPage: 1,
   pageSize: 12,
+
+  setProducts: (products) => set({ products }),
 
   setFilter: (filter) =>
     set((state) => ({

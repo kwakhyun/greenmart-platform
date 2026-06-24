@@ -14,6 +14,7 @@ const config = {
     "^@greenmart/shared/(.*)$": "<rootDir>/../../packages/shared/src/$1",
   },
   testPathIgnorePatterns: ["<rootDir>/node_modules/", "<rootDir>/.next/"],
+  modulePathIgnorePatterns: ["<rootDir>/.next/"],
 };
 
 module.exports = createJestConfig(config);

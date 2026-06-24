@@ -313,6 +313,93 @@ export interface OrderListResponse {
   statusCounts: Record<string, number>;
 }
 
+export type OrderRequestStatus =
+  | "RECEIVED"
+  | "CONTACTED"
+  | "CONFIRMED"
+  | "CANCELLED";
+
+export type FulfillmentRisk = "LOW" | "MEDIUM" | "HIGH";
+
+export type WebhookSyncStatus =
+  | "NOT_CONFIGURED"
+  | "PENDING"
+  | "DELIVERED"
+  | "FAILED";
+
+export interface OrderRequest {
+  id: string;
+  orderNumber: string;
+  customer: {
+    name: string;
+    phone: string;
+    address: string;
+    note?: string;
+  };
+  deliverySlot: {
+    id: string;
+    label: string;
+    time: string;
+    capacity: string;
+  };
+  subscriptionPlan: {
+    id: string;
+    title: string;
+    summary: string;
+    discount: string;
+  };
+  items: {
+    id: string;
+    name: string;
+    unit: string;
+    price: number;
+    quantity: number;
+  }[];
+  pricing: {
+    subtotal: number;
+    deliveryFee: number;
+    planDiscount: number;
+    total: number;
+  };
+  status: OrderRequestStatus;
+  fulfillmentRisk: FulfillmentRisk;
+  riskReasons: string[];
+  slaDueAt: string;
+  webhookSyncStatus: WebhookSyncStatus;
+  webhookAttempts: number;
+  nextWebhookAttemptAt?: string;
+  acceptedAt: string;
+  updatedAt: string;
+}
+
+export interface OrderRequestListParams {
+  page?: number;
+  size?: number;
+  status?: OrderRequestStatus;
+  risk?: FulfillmentRisk;
+  search?: string;
+}
+
+export interface OrderRequestListResponse {
+  items: OrderRequest[];
+  pagination: {
+    page: number;
+    size: number;
+    totalItems: number;
+    totalPages: number;
+  };
+  summary: {
+    total: number;
+    received: number;
+    contacted: number;
+    confirmed: number;
+    cancelled: number;
+    highRisk: number;
+    webhookFailed: number;
+    slaBreached: number;
+  };
+}
+
 export const orderApi = {
   getOrders(params: OrderListParams = {}): Promise<OrderListResponse> {
     return fetchApi<OrderListResponse>(
@@ -328,6 +415,36 @@ export const orderApi = {
     return fetchApi<Order>(`/settlement/orders/${id}/status`, {
       method: "PATCH",
       body: JSON.stringify({ status }),
+    });
+  },
+
+  getOrderRequests(
+    params: OrderRequestListParams = {},
+  ): Promise<OrderRequestListResponse> {
+    return fetchApi<OrderRequestListResponse>(
+      `/settlement/order-requests${toQueryString(params as Record<string, string | number | undefined>)}`,
+    );
+  },
+
+  updateOrderRequestStatus(
+    id: string,
+    status: OrderRequestStatus,
+  ): Promise<OrderRequest> {
+    return fetchApi<OrderRequest>(`/settlement/order-requests/${id}/status`, {
+      method: "PATCH",
+      body: JSON.stringify({ status }),
+    });
+  },
+
+  retryOrderRequestWebhooks(): Promise<{
+    delivered: number;
+    failed: number;
+    skipped: number;
+    processedEventIds: string[];
+    webhookFailed: number;
+  }> {
+    return fetchApi("/settlement/order-requests/outbox/retry", {
+      method: "POST",
     });
   },
 };

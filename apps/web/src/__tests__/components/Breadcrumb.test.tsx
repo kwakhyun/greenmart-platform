@@ -33,12 +33,12 @@ describe("Breadcrumb", () => {
     expect(lastCrumb).toHaveAttribute("aria-current", "page");
   });
 
-  it("renders home icon link", () => {
+  it("renders admin home icon link", () => {
     mockPathname.mockReturnValue("/settlement/orders");
     render(<Breadcrumb />);
 
-    const homeLink = screen.getByText("홈");
-    expect(homeLink.closest("a")).toHaveAttribute("href", "/");
+    const homeLink = screen.getByText("운영 홈");
+    expect(homeLink.closest("a")).toHaveAttribute("href", "/admin");
   });
 
   it("renders deep path with 3 segments", () => {

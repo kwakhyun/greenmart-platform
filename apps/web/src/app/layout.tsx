@@ -9,8 +9,8 @@ export const metadata: Metadata = {
   description:
     "산지 직송 제철 식재료를 원하는 배송 슬롯에 맞춰 받는 친환경 식료품 주문 서비스",
   icons: {
-    icon: "/favicon.svg",
-    apple: "/app-icon.svg",
+    icon: "/greenmart-leaf.svg",
+    apple: "/greenmart-leaf.svg",
   },
 };
 

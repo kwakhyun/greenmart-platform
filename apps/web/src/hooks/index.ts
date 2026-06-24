@@ -21,7 +21,14 @@ export {
   useCreateMember,
   useDeleteMember,
 } from "./useCustomerQueries";
-export { useOrders, useOrder, useUpdateOrderStatus } from "./useOrderQueries";
+export {
+  useOrders,
+  useOrder,
+  useOrderRequests,
+  useRetryOrderRequestWebhooks,
+  useUpdateOrderStatus,
+  useUpdateOrderRequestStatus,
+} from "./useOrderQueries";
 export {
   useWarehouses,
   useStock,
