@@ -8,17 +8,14 @@
     "apps/*"
   ],
   "scripts": {
-    "dev": "npm run dev:api & npm run dev:web",
-    "dev:web": "npm run dev -w apps/web",
+    "dev": "npm run dev -w apps/web",
     "dev:api": "npm run dev -w apps/api",
     "build": "npm run build -w packages/shared && npm run build -w apps/api && npm run build -w apps/web",
-    "build:shared": "npm run build -w packages/shared",
-    "build:api": "npm run build -w apps/api",
-    "build:web": "npm run build -w apps/web",
-    "lint": "npm run lint -w apps/web && npm run lint -w apps/api",
+    "lint": "npm run lint -w apps/api && npm run lint -w apps/web",
     "type-check": "npm run type-check --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
-    "test:coverage": "npm run test:coverage --workspaces --if-present",
+    "db:up": "node scripts/db-up.mjs",
+    "db:down": "node scripts/db-down.mjs",
     "clean": "rm -rf node_modules apps/*/node_modules packages/*/node_modules apps/web/.next apps/api/dist packages/shared/dist"
   },
   "devDependencies": {

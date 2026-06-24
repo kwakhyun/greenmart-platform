@@ -1,13 +1,24 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
-  "buildCommand": "cd ../.. && npm run build:shared && cd apps/api && npm run build",
+  "buildCommand": "cd ../.. && npm run build -w packages/shared && npm run build -w apps/api",
   "installCommand": "cd ../.. && npm install --include=dev",
-  "outputDirectory": "dist",
-  "rewrites": [
+  "builds": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api"
+      "src": "api/index.ts",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "api/index.ts"
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/outbox",
+      "schedule": "0 0 * * *"
     }
   ]
 }
