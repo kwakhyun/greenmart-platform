@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PaginationQuerySchema = exports.ApiErrorSchema = exports.SettlementQuerySchema = exports.OrderFilterSchema = exports.CustomerSearchSchema = exports.ProductFormSchema = void 0;
+exports.PaginationQuerySchema = exports.ApiErrorSchema = exports.SettlementQuerySchema = exports.OrderFilterSchema = exports.CustomerSearchSchema = exports.OrderStatusUpdateSchema = exports.CustomerFormSchema = exports.ProductFormSchema = void 0;
 const zod_1 = require("zod");
 /** 상품 등록/수정 폼 스키마 */
 exports.ProductFormSchema = zod_1.z
@@ -37,6 +37,30 @@ exports.ProductFormSchema = zod_1.z
     .refine((data) => data.salePrice <= data.originalPrice, {
     message: "할인가는 정가보다 낮아야 합니다",
     path: ["salePrice"],
+});
+/** 회원 등록 폼 스키마 */
+exports.CustomerFormSchema = zod_1.z.object({
+    name: zod_1.z.string().min(2, "이름은 2자 이상이어야 합니다").max(50),
+    email: zod_1.z.string().email("올바른 이메일 형식이어야 합니다"),
+    phone: zod_1.z
+        .string()
+        .regex(/^01[0-9]-\d{3,4}-\d{4}$/, "올바른 전화번호 형식이어야 합니다 (01x-xxxx-xxxx)"),
+    grade: zod_1.z.enum(["BRONZE", "SILVER", "GOLD", "PLATINUM"]).default("BRONZE"),
+    status: zod_1.z.enum(["ACTIVE", "DORMANT", "WITHDRAWN"]).default("ACTIVE"),
+    joinChannel: zod_1.z.enum(["ONLINE", "OFFLINE", "APP", "GLOBAL"]),
+});
+/** 주문 상태 변경 스키마 */
+exports.OrderStatusUpdateSchema = zod_1.z.object({
+    status: zod_1.z.enum([
+        "PENDING",
+        "CONFIRMED",
+        "PROCESSING",
+        "SHIPPED",
+        "DELIVERED",
+        "CANCELLED",
+        "REFUNDED",
+        "PARTIALLY_REFUNDED",
+    ]),
 });
 /** 회원 검색 쿼리 스키마 */
 exports.CustomerSearchSchema = zod_1.z.object({

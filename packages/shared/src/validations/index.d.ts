@@ -15,58 +15,91 @@ export declare const ProductFormSchema: z.ZodEffects<z.ZodObject<{
     status: z.ZodEnum<["ACTIVE", "INACTIVE", "OUT_OF_STOCK", "DISCONTINUED"]>;
 }, "strip", z.ZodTypeAny, {
     name: string;
-    description: string;
-    shortDescription: string;
-    originalPrice: number;
-    salePrice: number;
-    tags: ("BEST" | "NEW" | "SALE" | "TODAY_DEAL" | "ONLINE_ONLY" | "EDITOR_PICK" | "GLOBAL")[];
-    salesChannels: ("GLOBAL" | "ONLINE" | "OFFLINE")[];
-    status: "ACTIVE" | "INACTIVE" | "OUT_OF_STOCK" | "DISCONTINUED";
     brandId: string;
     categoryId: string;
+    originalPrice: number;
+    salePrice: number;
+    description: string;
+    shortDescription: string;
+    status: "ACTIVE" | "INACTIVE" | "OUT_OF_STOCK" | "DISCONTINUED";
+    tags: ("BEST" | "NEW" | "SALE" | "TODAY_DEAL" | "ONLINE_ONLY" | "EDITOR_PICK" | "GLOBAL")[];
+    salesChannels: ("GLOBAL" | "ONLINE" | "OFFLINE")[];
     volume?: string | undefined;
     skinType?: string[] | undefined;
 }, {
     name: string;
-    description: string;
-    shortDescription: string;
-    originalPrice: number;
-    salePrice: number;
-    tags: ("BEST" | "NEW" | "SALE" | "TODAY_DEAL" | "ONLINE_ONLY" | "EDITOR_PICK" | "GLOBAL")[];
-    salesChannels: ("GLOBAL" | "ONLINE" | "OFFLINE")[];
-    status: "ACTIVE" | "INACTIVE" | "OUT_OF_STOCK" | "DISCONTINUED";
     brandId: string;
     categoryId: string;
+    originalPrice: number;
+    salePrice: number;
+    description: string;
+    shortDescription: string;
+    status: "ACTIVE" | "INACTIVE" | "OUT_OF_STOCK" | "DISCONTINUED";
+    tags: ("BEST" | "NEW" | "SALE" | "TODAY_DEAL" | "ONLINE_ONLY" | "EDITOR_PICK" | "GLOBAL")[];
+    salesChannels: ("GLOBAL" | "ONLINE" | "OFFLINE")[];
     volume?: string | undefined;
     skinType?: string[] | undefined;
 }>, {
     name: string;
-    description: string;
-    shortDescription: string;
-    originalPrice: number;
-    salePrice: number;
-    tags: ("BEST" | "NEW" | "SALE" | "TODAY_DEAL" | "ONLINE_ONLY" | "EDITOR_PICK" | "GLOBAL")[];
-    salesChannels: ("GLOBAL" | "ONLINE" | "OFFLINE")[];
-    status: "ACTIVE" | "INACTIVE" | "OUT_OF_STOCK" | "DISCONTINUED";
     brandId: string;
     categoryId: string;
+    originalPrice: number;
+    salePrice: number;
+    description: string;
+    shortDescription: string;
+    status: "ACTIVE" | "INACTIVE" | "OUT_OF_STOCK" | "DISCONTINUED";
+    tags: ("BEST" | "NEW" | "SALE" | "TODAY_DEAL" | "ONLINE_ONLY" | "EDITOR_PICK" | "GLOBAL")[];
+    salesChannels: ("GLOBAL" | "ONLINE" | "OFFLINE")[];
     volume?: string | undefined;
     skinType?: string[] | undefined;
 }, {
     name: string;
-    description: string;
-    shortDescription: string;
-    originalPrice: number;
-    salePrice: number;
-    tags: ("BEST" | "NEW" | "SALE" | "TODAY_DEAL" | "ONLINE_ONLY" | "EDITOR_PICK" | "GLOBAL")[];
-    salesChannels: ("GLOBAL" | "ONLINE" | "OFFLINE")[];
-    status: "ACTIVE" | "INACTIVE" | "OUT_OF_STOCK" | "DISCONTINUED";
     brandId: string;
     categoryId: string;
+    originalPrice: number;
+    salePrice: number;
+    description: string;
+    shortDescription: string;
+    status: "ACTIVE" | "INACTIVE" | "OUT_OF_STOCK" | "DISCONTINUED";
+    tags: ("BEST" | "NEW" | "SALE" | "TODAY_DEAL" | "ONLINE_ONLY" | "EDITOR_PICK" | "GLOBAL")[];
+    salesChannels: ("GLOBAL" | "ONLINE" | "OFFLINE")[];
     volume?: string | undefined;
     skinType?: string[] | undefined;
 }>;
 export type ProductFormData = z.infer<typeof ProductFormSchema>;
+/** 회원 등록 폼 스키마 */
+export declare const CustomerFormSchema: z.ZodObject<{
+    name: z.ZodString;
+    email: z.ZodString;
+    phone: z.ZodString;
+    grade: z.ZodDefault<z.ZodEnum<["BRONZE", "SILVER", "GOLD", "PLATINUM"]>>;
+    status: z.ZodDefault<z.ZodEnum<["ACTIVE", "DORMANT", "WITHDRAWN"]>>;
+    joinChannel: z.ZodEnum<["ONLINE", "OFFLINE", "APP", "GLOBAL"]>;
+}, "strip", z.ZodTypeAny, {
+    name: string;
+    status: "ACTIVE" | "DORMANT" | "WITHDRAWN";
+    email: string;
+    phone: string;
+    grade: "BRONZE" | "SILVER" | "GOLD" | "PLATINUM";
+    joinChannel: "GLOBAL" | "ONLINE" | "OFFLINE" | "APP";
+}, {
+    name: string;
+    email: string;
+    phone: string;
+    joinChannel: "GLOBAL" | "ONLINE" | "OFFLINE" | "APP";
+    status?: "ACTIVE" | "DORMANT" | "WITHDRAWN" | undefined;
+    grade?: "BRONZE" | "SILVER" | "GOLD" | "PLATINUM" | undefined;
+}>;
+export type CustomerFormData = z.infer<typeof CustomerFormSchema>;
+/** 주문 상태 변경 스키마 */
+export declare const OrderStatusUpdateSchema: z.ZodObject<{
+    status: z.ZodEnum<["PENDING", "CONFIRMED", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED", "REFUNDED", "PARTIALLY_REFUNDED"]>;
+}, "strip", z.ZodTypeAny, {
+    status: "PENDING" | "CONFIRMED" | "SHIPPED" | "DELIVERED" | "PROCESSING" | "CANCELLED" | "REFUNDED" | "PARTIALLY_REFUNDED";
+}, {
+    status: "PENDING" | "CONFIRMED" | "SHIPPED" | "DELIVERED" | "PROCESSING" | "CANCELLED" | "REFUNDED" | "PARTIALLY_REFUNDED";
+}>;
+export type OrderStatusUpdateData = z.infer<typeof OrderStatusUpdateSchema>;
 /** 회원 검색 쿼리 스키마 */
 export declare const CustomerSearchSchema: z.ZodObject<{
     query: z.ZodOptional<z.ZodString>;
@@ -79,14 +112,14 @@ export declare const CustomerSearchSchema: z.ZodObject<{
     page: number;
     size: number;
     status?: "ACTIVE" | "DORMANT" | "WITHDRAWN" | undefined;
-    query?: string | undefined;
     grade?: "BRONZE" | "SILVER" | "GOLD" | "PLATINUM" | undefined;
     joinChannel?: "GLOBAL" | "ONLINE" | "OFFLINE" | "APP" | undefined;
+    query?: string | undefined;
 }, {
     status?: "ACTIVE" | "DORMANT" | "WITHDRAWN" | undefined;
-    query?: string | undefined;
     grade?: "BRONZE" | "SILVER" | "GOLD" | "PLATINUM" | undefined;
     joinChannel?: "GLOBAL" | "ONLINE" | "OFFLINE" | "APP" | undefined;
+    query?: string | undefined;
     page?: number | undefined;
     size?: number | undefined;
 }>;
@@ -134,13 +167,13 @@ export declare const ApiErrorSchema: z.ZodObject<{
     code: z.ZodOptional<z.ZodString>;
     details: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodArray<z.ZodString, "many">>>;
 }, "strip", z.ZodTypeAny, {
-    status: number;
     message: string;
+    status: number;
     code?: string | undefined;
     details?: Record<string, string[]> | undefined;
 }, {
-    status: number;
     message: string;
+    status: number;
     code?: string | undefined;
     details?: Record<string, string[]> | undefined;
 }>;
